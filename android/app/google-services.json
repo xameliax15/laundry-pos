@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "708438026861",
+    "project_id": "laundry-pos-5d67c",
+    "storage_bucket": "laundry-pos-5d67c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708438026861:android:c7a0031e4d712b768dad64",
+        "android_client_info": {
+          "package_name": "com.example.laundry_pos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVLf_Gu5IQGrr9048_nYAfEADi0lNDLlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
