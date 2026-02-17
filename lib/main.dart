@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'core/constants.dart';
 import 'core/routes.dart';
 import 'core/logger.dart';
@@ -13,9 +12,12 @@ import 'providers/provider_setup.dart';
 Future<void> main() async {
   // Ensure Flutter binding is initialized first
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Load environment variables from .env file
-  await dotenv.load();
+  
+  // Initialize date formatting for Indonesian locale
+  await initializeDateFormatting('id_ID', null);
+  
+  // Initialize date formatting for Indonesian locale
+  await initializeDateFormatting('id_ID', null);
   
   // Initialize Supabase
   await Supabase.initialize(

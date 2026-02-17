@@ -35,8 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   
-  # Environment & Configuration
-  flutter_dotenv: ^5.1.0
+  # Internationalization
+  intl: ^0.19.0
+
   
   # Logging
   logger: ^2.0.0
@@ -57,6 +58,19 @@ dependencies:
   # Image Picker
   image_picker: ^1.0.7
   supabase_flutter: ^2.12.0
+  
+  # QRIS Payment Integration
+  qr_flutter: ^4.1.0          # Generate QR code widget
+  crypto: ^3.0.3              # For signature verification
+  
+  # PDF Export
+  pdf: ^3.10.7                # Generate PDF documents
+  printing: ^5.11.1           # Print/save PDF (web & mobile support)
+  
+  # URL Launcher (for Google Maps)
+  url_launcher: ^6.2.4
+  uuid: ^4.5.2
+
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +82,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,7 +97,6 @@ flutter:
 
   assets:
     - assets/images/trias_logo.png
-    - .env
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -108,3 +122,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  windows: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
