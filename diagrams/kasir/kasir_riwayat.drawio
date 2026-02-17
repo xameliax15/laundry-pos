@@ -1,0 +1,188 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Riwayat Transaksi - Kasir" id="riwayat-kasir">
+    <mxGraphModel dx="1020" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rUec1a5QMFAr76qxSiuD-5" edge="1" parent="1" source="updateStatus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1325" y="750" />
+              <mxPoint x="1140" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="updateStatus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Update Status" vertex="1">
+          <mxGeometry height="30" width="70" x="1290" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="updateStatus" value="Status">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2y8648pFoNNlL1-qiLrY-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;" value="riwayat" vertex="1">
+          <mxGeometry height="820" width="740" x="610.0000000000005" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="2y8648pFoNNlL1-qiLrY-2" parent="2y8648pFoNNlL1-qiLrY-1" style="swimlane;startSize=20;html=1;" value="kasir" vertex="1">
+          <mxGeometry height="800" width="260" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="2y8648pFoNNlL1-qiLrY-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="109.99999999999955" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="clickRiwayat" parent="2y8648pFoNNlL1-qiLrY-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Riwayat Transaksi&#39;&#xa;dari Sidebar/Bottom Nav" vertex="1">
+          <mxGeometry height="60" width="160" x="49.999999999999545" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="2y8648pFoNNlL1-qiLrY-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickRiwayat" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showList" parent="2y8648pFoNNlL1-qiLrY-2" style="rounded=1;whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Tampil List Transaksi:&lt;br&gt;- Tab filter (All/Pending/Proses/&lt;br&gt;  Selesai/Diterima)&lt;br&gt;- Search bar&lt;br&gt;- List items:&lt;br&gt;  • Customer name&lt;br&gt;  • No transaksi&lt;br&gt;  • Total harga&lt;br&gt;  • Status badge&lt;br&gt;  • Tanggal" vertex="1">
+          <mxGeometry height="150" width="210" x="24.999999999999545" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="2y8648pFoNNlL1-qiLrY-1" source="clickRiwayat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="navigate" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="2y8648pFoNNlL1-qiLrY-1" source="loadTrx" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showList" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="2y8648pFoNNlL1-qiLrY-1" source="showList" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="235" />
+              <mxPoint x="270" y="235" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="2y8648pFoNNlL1-qiLrY-1" source="filterLocal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;labelBackgroundColor=none;fontColor=default;" target="showList" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="380" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2y8648pFoNNlL1-qiLrY-5" edge="1" parent="2y8648pFoNNlL1-qiLrY-1" source="applyFilter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.289;entryY=1.023;entryDx=0;entryDy=0;entryPerimeter=0;" target="showList">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2y8648pFoNNlL1-qiLrY-3" parent="2y8648pFoNNlL1-qiLrY-1" style="swimlane;startSize=20;html=1;" value="Lane 2" vertex="1">
+          <mxGeometry height="800" width="480" x="260" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="navigate" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigate to&#xa;KasirRiwayat page" vertex="1">
+          <mxGeometry height="60" width="160" x="69.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="loadTrx" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="getAllTransaksi()&#xa;(sorted by created_at DESC)" vertex="1">
+          <mxGeometry height="50" width="160" x="70" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="navigate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadTrx" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="refresh" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Pull-to-refresh" vertex="1">
+          <mxGeometry height="30" width="90" x="250" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="refresh" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=0;labelBackgroundColor=none;fontColor=default;" target="loadTrx" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="295" y="135" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec1" parent="2y8648pFoNNlL1-qiLrY-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Aksi?" vertex="1">
+          <mxGeometry height="50" width="55" x="122.5" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="refresh" value="Refresh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="search" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Input search&#xa;(customer name)" vertex="1">
+          <mxGeometry height="40" width="100" x="20" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="search" value="Search">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="70" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="filterStatus" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tap tab filter&#xa;(All/Pending/Proses/etc)" vertex="1">
+          <mxGeometry height="45" width="135" x="140" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="filterStatus" value="Filter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="viewDetail" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tap transaksi →&#xa;Lihat detail" vertex="1">
+          <mxGeometry height="40" width="100" x="250" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="viewDetail" value="Detail">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="applyFilter" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Filter by status" vertex="1">
+          <mxGeometry height="30" width="112.5" x="128.75" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="filterStatus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="applyFilter" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="filterLocal" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Filter local&#xa;(by search query)" vertex="1">
+          <mxGeometry height="40" width="101.25" x="20" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="search" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="filterLocal" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showDetail" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="_showDetailLaundry()&#xa;Dialog dengan:&#xa;- Info customer&#xa;- Detail laundry items&#xa;- Pembayaran info&#xa;- Tombol aksi" vertex="1">
+          <mxGeometry height="100" width="150" x="27.499999999999545" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="viewDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDetail" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec2" parent="2y8648pFoNNlL1-qiLrY-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Aksi&#xa;Detail?" vertex="1">
+          <mxGeometry height="80" width="80" x="319.99999999999955" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="showDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cetakStruk" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Cetak Struk" vertex="1">
+          <mxGeometry height="30" width="80" x="60" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="cetakStruk" value="Cetak">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="530" />
+              <mxPoint x="110" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2y8648pFoNNlL1-qiLrY-8" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="bayar" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bayar" parent="2y8648pFoNNlL1-qiLrY-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Input Pembayaran" vertex="1">
+          <mxGeometry height="40" width="90" x="210" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="bayar" value="Bayar">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="560" />
+              <mxPoint x="255" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end" parent="2y8648pFoNNlL1-qiLrY-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="249.99999999999955" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="rUec1a5QMFAr76qxSiuD-4" edge="1" parent="2y8648pFoNNlL1-qiLrY-3" source="cetakStruk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;labelBackgroundColor=none;fontColor=default;" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="660" />
+              <mxPoint x="270" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

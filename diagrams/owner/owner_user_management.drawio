@@ -1,0 +1,197 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="User Management - Owner" id="user-mgmt-owner">
+    <mxGraphModel dx="443" dy="1220" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="user management" vertex="1">
+          <mxGeometry height="950" width="800" x="1390" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-2" parent="PSlxv1IE9KIHnyZoT-XO-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="owner" vertex="1">
+          <mxGeometry height="930" width="300" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="PSlxv1IE9KIHnyZoT-XO-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="129.99999999999955" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="clickUserMgmt" parent="PSlxv1IE9KIHnyZoT-XO-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Manajemen User&#39;&#xa;dari Dashboard/Sidebar" vertex="1">
+          <mxGeometry height="60" width="160" x="69.99999999999955" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickUserMgmt" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showList" parent="PSlxv1IE9KIHnyZoT-XO-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampilkan List Users:&#xa;- Username&#xa;- Email&#xa;- Role (Kasir/Kurir)&#xa;- Aksi (Edit/Delete)" vertex="1">
+          <mxGeometry height="100" width="160" x="89.99999999999955" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="formEdit" parent="PSlxv1IE9KIHnyZoT-XO-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Form Dialog&lt;br&gt;(pre-fill data user):&lt;br&gt;- Username&lt;br&gt;- Email&lt;br&gt;- Phone&lt;div&gt;-role kasir/kurir&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="140" x="59.999999999999545" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="formAdd" parent="PSlxv1IE9KIHnyZoT-XO-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Form Dialog:&lt;br&gt;- Username&lt;br&gt;- Email&lt;br&gt;- Password&lt;br&gt;- Role (Kasir/Kurir/owner)" vertex="1">
+          <mxGeometry height="90" width="140" x="89.99999999999955" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="clickUserMgmt" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="navUserPage" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-9" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="loadUsers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="showList">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="180" />
+              <mxPoint x="350" y="220" />
+              <mxPoint x="170" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="showList" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-3" parent="PSlxv1IE9KIHnyZoT-XO-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="930" width="500" x="300" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="navUserPage" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigate to&#xa;UserManagementPage()" vertex="1">
+          <mxGeometry height="60" width="160" x="99.99999999999955" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loadUsers" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_loadUsers()&#xa;UserService.getAllUsers()" vertex="1">
+          <mxGeometry height="60" width="160" x="99.99999999999955" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="navUserPage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadUsers" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="refresh" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Refresh&#39;" vertex="1">
+          <mxGeometry height="50" width="120" x="239.99999999999955" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="refresh" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=0;labelBackgroundColor=none;fontColor=default;" target="loadUsers" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-20" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;labelBackgroundColor=none;fontColor=default;" target="addUser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-37" connectable="0" parent="PSlxv1IE9KIHnyZoT-XO-20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" value="edit" vertex="1">
+          <mxGeometry relative="1" x="0.5656" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-21" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="editUser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-38" connectable="0" parent="PSlxv1IE9KIHnyZoT-XO-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" value="tambah" vertex="1">
+          <mxGeometry relative="1" x="-0.1619" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-23" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="deleteUser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-40" connectable="0" parent="PSlxv1IE9KIHnyZoT-XO-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" value="delete" vertex="1">
+          <mxGeometry relative="1" x="0.804" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec1" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Pilih&#xa;Aksi?" vertex="1">
+          <mxGeometry height="80" width="80" x="149.99999999999955" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="refresh" value="Refresh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="addUser" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;edit User&#39;" vertex="1">
+          <mxGeometry height="40" width="100" x="20" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="editUser" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;tambah&#39; User" vertex="1">
+          <mxGeometry height="40" width="90" x="145" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-24" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="deleteUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="confirmDel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteUser" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Delete&#39; User" vertex="1">
+          <mxGeometry height="40" width="103" x="286" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="confirmDel" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Konfirmasi Dialog:&#xa;&#39;Yakin hapus user?&#39;" vertex="1">
+          <mxGeometry height="60" width="140" x="267.49999999999955" y="464" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Ya?" vertex="1">
+          <mxGeometry height="80" width="80" x="297.49999999999955" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="confirmDel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-32" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="updateUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="merge1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="updateUser" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Simpan&#39;&lt;br&gt;UserService.createUser()&lt;br&gt;(Supabase Auth +&lt;br&gt;insert ke table users)" vertex="1">
+          <mxGeometry height="80" width="150" x="19.999999999999545" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-35" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="saveUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="merge1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="610" />
+              <mxPoint x="235" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="saveUser" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Simpan&#39;&lt;br&gt;UserService.updateUser()&lt;br&gt;(update table users)" vertex="1">
+          <mxGeometry height="76" width="130" x="15" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="execDelete" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="UserService.deleteUser()&#xa;(delete dari Supabase Auth&#xa;+ table users)" vertex="1">
+          <mxGeometry height="70" width="150" x="280" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="merge1" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="220" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="execDelete" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadUsers" parent="PSlxv1IE9KIHnyZoT-XO-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_loadUsers()&#xa;(refresh list)" vertex="1">
+          <mxGeometry height="60" width="120" x="175" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="merge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="reloadUsers" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="PSlxv1IE9KIHnyZoT-XO-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="220" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="jsR_lBMyiyUW8gt-e1_b-2" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="reloadUsers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-46" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.356;entryY=0.01;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;fontColor=default;" target="execDelete">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-47" connectable="0" parent="PSlxv1IE9KIHnyZoT-XO-46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" value="ya" vertex="1">
+          <mxGeometry relative="1" x="-0.2069" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="formEdit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="updateUser" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-26" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="addUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="formAdd">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320" y="435" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="formAdd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="saveUser" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="435" />
+              <mxPoint x="270" y="548" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-27" edge="1" parent="PSlxv1IE9KIHnyZoT-XO-1" source="editUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;labelBackgroundColor=none;fontColor=default;" target="formEdit">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="640" />
+              <mxPoint x="160" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PSlxv1IE9KIHnyZoT-XO-42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;labelBackgroundColor=none;" value="Text" vertex="1">
+          <mxGeometry height="30" width="60" x="1560" y="600" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

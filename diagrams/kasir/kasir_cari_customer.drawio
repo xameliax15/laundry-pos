@@ -1,0 +1,120 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Cari Customer - Kasir" id="cari-customer-kasir">
+    <mxGraphModel dx="1055" dy="1017" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zj0BgXe-QddCJWmBTnTc-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;" value="cari costumer" vertex="1">
+          <mxGeometry height="1010" width="670" x="660.0000000000005" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="zj0BgXe-QddCJWmBTnTc-2" parent="zj0BgXe-QddCJWmBTnTc-1" style="swimlane;startSize=20;html=1;" value="kasir" vertex="1">
+          <mxGeometry height="990" width="290" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="zj0BgXe-QddCJWmBTnTc-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="126.99999999999955" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="clickSearch" parent="zj0BgXe-QddCJWmBTnTc-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Cari Customer&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="66.99999999999955" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="zj0BgXe-QddCJWmBTnTc-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickSearch" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showList" parent="zj0BgXe-QddCJWmBTnTc-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampil List Customer:&#xa;- Avatar icon&#xa;- Nama&#xa;- No. Telepon&#xa;- Alamat (jika ada)&#xa;(scrollable max 300px)" vertex="1">
+          <mxGeometry height="110" width="180" x="49.999999999999545" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="emptyState" parent="zj0BgXe-QddCJWmBTnTc-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil state:&#xa;(kosong, tunggu input)" vertex="1">
+          <mxGeometry height="60" width="150" x="50" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="zj0BgXe-QddCJWmBTnTc-1" source="clickSearch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="zj0BgXe-QddCJWmBTnTc-1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showList" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="zj0BgXe-QddCJWmBTnTc-1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="emptyState" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zj0BgXe-QddCJWmBTnTc-5" edge="1" parent="zj0BgXe-QddCJWmBTnTc-1" source="emptyState" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="inputSearch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zj0BgXe-QddCJWmBTnTc-3" parent="zj0BgXe-QddCJWmBTnTc-1" style="swimlane;startSize=20;html=1;" value="system" vertex="1">
+          <mxGeometry height="990" width="380" x="290" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_showSearchCustomerDialog()&#xa;(tampil dialog search)" vertex="1">
+          <mxGeometry height="60" width="160" x="59.999999999999545" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="inputSearch" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Input Search:&#xa;Nama atau No. Telepon&#xa;(real-time)" vertex="1">
+          <mxGeometry height="40" width="160" x="60" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="inputSearch" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="zj0BgXe-QddCJWmBTnTc-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Input&#xa;!= empty?" vertex="1">
+          <mxGeometry height="80" width="80" x="99.99999999999955" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="inputSearch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="zj0BgXe-QddCJWmBTnTc-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Results&#xa;!= empty?" vertex="1">
+          <mxGeometry height="80" width="80" x="149.99999999999955" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="searchCustomer" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="CustomerService&#xa;.searchCustomer(value)&#xa;(query database)" vertex="1">
+          <mxGeometry height="70" width="160" x="59.999999999999545" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="searchCustomer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="searchCustomer" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zj0BgXe-QddCJWmBTnTc-6" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="noResults" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="inputSearch">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="noResults" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil:&#xa;&#39;Tidak ada customer&#xa;yang ditemukan&#39;" vertex="1">
+          <mxGeometry height="60" width="140" x="230.99999999999955" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="noResults" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec3" parent="zj0BgXe-QddCJWmBTnTc-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tap&#xa;Customer?" vertex="1">
+          <mxGeometry height="80" width="80" x="149.99999999999955" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="clearSearch" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tombol &#39;Hapus&#39;&#xa;→ Clear search input" vertex="1">
+          <mxGeometry height="50" width="120" x="241" y="742" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="dec3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clearSearch" value="Hapus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showDetail" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Customer: [nama] - [phone]&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="29.999999999999545" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="dec3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDetail" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="closeDialog" parent="zj0BgXe-QddCJWmBTnTc-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigator.pop()" vertex="1">
+          <mxGeometry height="50" width="160" x="29.999999999999545" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="showDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="closeDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="zj0BgXe-QddCJWmBTnTc-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="89.99999999999955" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="zj0BgXe-QddCJWmBTnTc-3" source="closeDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="zj0BgXe-QddCJWmBTnTc-1" source="showList" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,109 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Active Orders Dialog - Kurir" id="kurir-active-orders">
+    <mxGraphModel dx="1020" dy="1777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="displayCards" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampil Order Cards:&#xa;- Customer name &amp; phone&#xa;- Order ID &amp; date&#xa;- Status badge&#xa;- Total harga&#xa;- Delivery indicator&#xa;- Action buttons:&#xa;  • Call&#xa;  • Maps (disabled)&#xa;  • Update Status" vertex="1">
+          <mxGeometry height="150" width="250" x="480" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="applyFilter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="displayCards" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="displayCards" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="decEmpty" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aSr5Vq_kivb_EE2hs6hx-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="orderr aktif" vertex="1">
+          <mxGeometry height="890" width="690" x="425" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="aSr5Vq_kivb_EE2hs6hx-2" parent="aSr5Vq_kivb_EE2hs6hx-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kurir" vertex="1">
+          <mxGeometry height="870" width="330" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="aSr5Vq_kivb_EE2hs6hx-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="145" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickOrders" parent="aSr5Vq_kivb_EE2hs6hx-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Orders&#39;&#xa;dari Bottom Nav" vertex="1">
+          <mxGeometry height="60" width="160" x="85" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickOrders" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="filterActive" parent="aSr5Vq_kivb_EE2hs6hx-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="_filterOrders()&#xa;Filter order aktif:&#xa;- status = &#39;selesai&#39; OR&#xa;- status = &#39;dikirim&#39;&#xa;(BUKAN &#39;diterima&#39;)" vertex="1">
+          <mxGeometry height="90" width="230" x="65" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="displayTabs" parent="aSr5Vq_kivb_EE2hs6hx-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil Tab Filter:&#xa;- Semua (all active)&#xa;- Selesai&#xa;- Dikirim" vertex="1">
+          <mxGeometry height="70" width="160" x="100" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-2" source="filterActive" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="displayTabs" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="userActions" parent="aSr5Vq_kivb_EE2hs6hx-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="User dapat:&#xa;- Switch tab&#xa;- Pull to refresh&#xa;- Tap Call button&#xa;- Tap Update Status&#xa;- Navigate bottom nav" vertex="1">
+          <mxGeometry height="90" width="200" x="55" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="aSr5Vq_kivb_EE2hs6hx-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="135" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-2" source="userActions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aSr5Vq_kivb_EE2hs6hx-3" parent="aSr5Vq_kivb_EE2hs6hx-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="870" width="360" x="330" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="navOrders" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigator.pushNamed&#xa;(AppRoutes.kurirOrders)" vertex="1">
+          <mxGeometry height="60" width="160" x="72" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="loadProvider" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="TransaksiProvider&#xa;.transaksi&#xa;(gunakan data dari provider)" vertex="1">
+          <mxGeometry height="70" width="200" x="52" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-3" source="navOrders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadProvider" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="applyFilter" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Apply Selected Tab:&#xa;Filter by _selectedTab" vertex="1">
+          <mxGeometry height="60" width="160" x="85" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="decEmpty" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Ada&#xa;Orders?" vertex="1">
+          <mxGeometry height="80" width="80" x="152" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="showList" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="ListView.builder:&#xa;Tampil semua order cards" vertex="1">
+          <mxGeometry height="60" width="160" x="25" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-3" source="decEmpty" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showList" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="emptyState" parent="aSr5Vq_kivb_EE2hs6hx-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_buildEmptyState()&#xa;Icon + Text:&#xa;&#39;Tidak ada&#xa;pengiriman aktif&#39;" vertex="1">
+          <mxGeometry height="60" width="140" x="205" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-3" source="decEmpty" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="emptyState" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end2" parent="aSr5Vq_kivb_EE2hs6hx-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="255" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-3" source="emptyState" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="275" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-1" source="clickOrders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="navOrders" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-1" source="loadProvider" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="filterActive" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-1" source="displayTabs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="applyFilter" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="aSr5Vq_kivb_EE2hs6hx-1" source="showList" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="userActions" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="435" y="610" />
+              <mxPoint x="155" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

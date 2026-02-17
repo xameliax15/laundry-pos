@@ -31,5 +31,5 @@ void logError(String message, {dynamic error, StackTrace? stackTrace}) {
 }
 
 void logCritical(String message, {dynamic error, StackTrace? stackTrace}) {
-  logger.wtf(message, error: error, stackTrace: stackTrace);
+  logger.f(message, error: error, stackTrace: stackTrace);
 }

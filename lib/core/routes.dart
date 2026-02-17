@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../pages/login_page.dart';
 import '../pages/kasir/kasir_dashboard.dart';
 import '../pages/kasir/kasir_riwayat.dart';
+import '../pages/kasir/kasir_orders.dart';
+import '../pages/kasir/kasir_pelanggan.dart';
 import '../pages/kurir/kurir_dashboard.dart';
 import '../pages/kurir/kurir_riwayat.dart';
+import '../pages/kurir/kurir_orders.dart';
 import '../pages/owner/owner_dashboard.dart';
 import '../services/auth_service.dart';
 import 'constants.dart';
@@ -11,10 +14,14 @@ import 'constants.dart';
 class AppRoutes {
   static const String login = '/login';
   static const String kasirDashboard = '/kasir';
+  static const String kasirOrders = '/kasir/orders';
+  static const String kasirPelanggan = '/kasir/pelanggan';
   static const String kasirRiwayat = '/kasir/riwayat';
   static const String kurirDashboard = '/kurir';
+  static const String kurirOrders = '/kurir/orders';
   static const String kurirRiwayat = '/kurir/riwayat';
   static const String ownerDashboard = '/owner';
+
 
   static const String initialRoute = login;
 
@@ -26,6 +33,16 @@ class AppRoutes {
         const KasirDashboard(),
         AppConstants.roleKasir,
       ),
+      kasirOrders: (context) => _buildRouteWithAuth(
+        context,
+        const KasirOrders(),
+        AppConstants.roleKasir,
+      ),
+      kasirPelanggan: (context) => _buildRouteWithAuth(
+        context,
+        const KasirPelangganPage(),
+        AppConstants.roleKasir,
+      ),
       kasirRiwayat: (context) => _buildRouteWithAuth(
         context,
         const KasirRiwayat(),
@@ -34,6 +51,11 @@ class AppRoutes {
       kurirDashboard: (context) => _buildRouteWithAuth(
         context,
         const KurirDashboard(),
+        AppConstants.roleKurir,
+      ),
+      kurirOrders: (context) => _buildRouteWithAuth(
+        context,
+        const KurirOrders(),
         AppConstants.roleKurir,
       ),
       kurirRiwayat: (context) => _buildRouteWithAuth(
@@ -122,8 +144,9 @@ class AppRoutes {
   // Logout dan redirect ke login
   static Future<void> logout(BuildContext context) async {
     final authService = AuthService();
+    final navigator = Navigator.of(context);
     await authService.logout();
-    Navigator.of(context).pushNamedAndRemoveUntil(
+    navigator.pushNamedAndRemoveUntil(
       login,
       (route) => false,
     );

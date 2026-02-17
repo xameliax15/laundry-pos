@@ -1,0 +1,136 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Update Status - Kasir" id="update-status-kasir">
+    <mxGraphModel dx="1457" dy="869" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="r9ierDup4cXctsVgBFWW-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="update status" vertex="1">
+          <mxGeometry height="850" width="770" x="600" as="geometry" />
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-2" parent="r9ierDup4cXctsVgBFWW-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kasir" vertex="1">
+          <mxGeometry height="830" width="300" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="r9ierDup4cXctsVgBFWW-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="150" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="selectTrx" parent="r9ierDup4cXctsVgBFWW-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Pilih transaksi&#xa;dari dashboard list" vertex="1">
+          <mxGeometry height="50" width="140" x="100" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="r9ierDup4cXctsVgBFWW-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="selectTrx" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="clickUpdate" parent="r9ierDup4cXctsVgBFWW-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik tombol&#xa;&#39;Update Status&#39;" vertex="1">
+          <mxGeometry height="40" width="130" x="105" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="r9ierDup4cXctsVgBFWW-2" source="selectTrx" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickUpdate" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showCurrent" parent="r9ierDup4cXctsVgBFWW-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil status saat ini:&#xa;- pending / proses / selesai" vertex="1">
+          <mxGeometry height="60" width="160" x="80" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="success" parent="r9ierDup4cXctsVgBFWW-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Status berhasil diupdate&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="50" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="r9ierDup4cXctsVgBFWW-1" source="clickUpdate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDialog" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="220" />
+              <mxPoint x="330" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="r9ierDup4cXctsVgBFWW-1" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showCurrent" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="510" y="240" />
+              <mxPoint x="360" y="240" />
+              <mxPoint x="360" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="r9ierDup4cXctsVgBFWW-1" source="showCurrent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-3" parent="r9ierDup4cXctsVgBFWW-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="830" width="470" x="300" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_showUpdateStatusDialog()&#xa;Tampil dialog" vertex="1">
+          <mxGeometry height="60" width="160" x="170" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="r9ierDup4cXctsVgBFWW-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Status&#xa;sekarang?" vertex="1">
+          <mxGeometry height="80" width="80" x="95" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-8" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="prosesSelesai" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="refreshProvider">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="270" />
+              <mxPoint x="270" y="605" />
+            </Array>
+            <mxPoint x="250" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prosesSelesai" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="proses → selesai" vertex="1">
+          <mxGeometry height="40" width="140" x="250" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="prosesSelesai" value="proses">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-6" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="pendingProses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="refreshProvider">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pendingProses" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="pending → proses" vertex="1">
+          <mxGeometry height="60" width="160" x="55" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="pendingProses" value="pending">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-7" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="alreadyDone" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="refreshProvider">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="alreadyDone" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Sudah selesai,&#xa;tidak bisa update" vertex="1">
+          <mxGeometry height="60" width="105" x="285" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="alreadyDone" value="selesai">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="373" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end2" parent="r9ierDup4cXctsVgBFWW-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="317.5" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="alreadyDone" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="refreshProvider" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="update status dikirim ke supabase" vertex="1">
+          <mxGeometry height="60" width="160" x="55" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="r9ierDup4cXctsVgBFWW-9" edge="1" parent="r9ierDup4cXctsVgBFWW-3" source="closeDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="end2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="closeDialog" parent="r9ierDup4cXctsVgBFWW-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigator.pop()" vertex="1">
+          <mxGeometry height="50" width="130" x="40" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="r9ierDup4cXctsVgBFWW-1" source="refreshProvider" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="success" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="r9ierDup4cXctsVgBFWW-1" source="success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="closeDialog" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

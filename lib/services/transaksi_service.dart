@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import 'dart:math';
 import '../models/transaksi.dart';
 import '../models/detail_laundry.dart';
 import '../models/customer.dart';
@@ -9,6 +10,7 @@ import '../database/database_helper.dart';
 import '../core/constants.dart';
 import '../core/transaction_fsm.dart';
 import 'customer_service.dart';
+import 'status_log_service.dart';
 
 class TransaksiService {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -17,7 +19,30 @@ class TransaksiService {
 
   DateTime _parseDate(dynamic value) {
     if (value is DateTime) return value;
-    return DateTime.parse(value as String);
+    if (value is String) return DateTime.parse(value);
+    throw FormatException('Invalid date format: $value');
+  }
+
+  String _generateUuid() {
+    final random = Random();
+    final s = StringBuffer();
+    for (var i = 0; i < 36; i++) {
+      if (i == 8 || i == 13 || i == 18 || i == 23) {
+        s.write('-');
+        continue;
+      }
+      final r = random.nextInt(16);
+      if (i == 14) {
+        s.write('4');
+        continue;
+      }
+      if (i == 19) {
+        s.write(((r & 0x3) | 0x8).toRadixString(16));
+        continue;
+      }
+      s.write(r.toRadixString(16));
+    }
+    return s.toString();
   }
 
   Transaksi _fromSupabase(Map<String, dynamic> json) {
@@ -201,12 +226,31 @@ class TransaksiService {
     );
 
     if (AppConstants.useSupabase) {
-      await _supabase.from('transaksi').insert(_toSupabase(transaksiWithCustomer));
+      // 1. Insert Transaction & Get UUID
+      var trxPayload = _toSupabase(transaksiWithCustomer);
+      // Generate explicit UUID valid karena DB tidak punya default value
+      final newId = _generateUuid();
+      trxPayload['id'] = newId; 
+      
+      final trxResponse = await _supabase
+          .from('transaksi')
+          .insert(trxPayload)
+          .select()
+          .single();
+      
+      final newTransaksi = _fromSupabase(trxResponse);
+
+      // 2. Insert Details with new UUID
       if (detailList.isNotEmpty) {
-        final detailPayload = detailList.map((detail) => detail.toJson()).toList();
+        final detailPayload = detailList.map((detail) {
+          final json = detail.toJson();
+          json['id_transaksi'] = newTransaksi.id; // Update Foreign Key
+          json['id'] = _generateUuid(); // Generate Detail ID juga biar aman
+          return json;
+        }).toList();
         await _supabase.from('detail_laundry').insert(detailPayload);
       }
-      return transaksiWithCustomer;
+      return newTransaksi;
     }
 
     await _db.insertTransaksi(transaksiWithCustomer);
@@ -266,8 +310,18 @@ class TransaksiService {
   // Create pembayaran
   Future<Pembayaran> createPembayaran(Pembayaran pembayaran) async {
     if (AppConstants.useSupabase) {
-      await _supabase.from('pembayaran').insert(pembayaran.toJson());
-      return pembayaran;
+      // Hanya kirim kolom yang pasti ada di database
+      final json = {
+        'id': _generateUuid(), // Generate Valid UUID
+        'transaksi_id': pembayaran.transaksiId,
+        'jumlah': pembayaran.jumlah,
+        'tanggal_bayar': pembayaran.tanggalBayar.toIso8601String(),
+        'metode_pembayaran': pembayaran.metodePembayaran,
+        'status': pembayaran.status,
+        'bukti_pembayaran': pembayaran.buktiPembayaran,
+      };
+      final response = await _supabase.from('pembayaran').insert(json).select().single();
+      return _pembayaranFromSupabase(response);
     }
     await _db.insertPembayaran(pembayaran);
     return pembayaran;
@@ -289,8 +343,16 @@ class TransaksiService {
   // Create order kurir
   Future<OrderKurir> createOrderKurir(OrderKurir orderKurir) async {
     if (AppConstants.useSupabase) {
-      await _supabase.from('order_kurir').insert(orderKurir.toJson());
-      return orderKurir;
+      final json = orderKurir.toJson();
+      json['id'] = _generateUuid(); // Generate Valid UUID
+      final response = await _supabase.from('order_kurir').insert(json).select().single();
+      // Parse response using helper or fromJson logic used elsewhere
+      // Assuming OrderKurir has logic or we use current object with updated ID if needed.
+      // But better: use the returned data.
+      // However, we don't have OrderKurir.fromJson here visible in context (likely below).
+      // Let's use the helper _orderKurirFromSupabase if available as instance method logic duplication? 
+      // Helper _orderKurirFromSupabase expects a map.
+      return _orderKurirFromSupabase(response);
     }
     await _db.insertOrderKurir(orderKurir);
     return orderKurir;
@@ -554,6 +616,14 @@ class TransaksiService {
       isDelivery: transaksi.isDelivery,
     );
     await updateTransaksi(updatedTransaksi);
+
+    // Log status change to status_logs table
+    final statusLogService = StatusLogService();
+    await statusLogService.logStatusChange(
+      transaksiId: transaksiId,
+      oldStatus: transaksi.status,
+      newStatus: newStatus,
+    );
 
     // Jika status menjadi 'selesai' dan delivery, buat OrderKurir (status transaksi tetap 'selesai')
     if (newStatus == 'selesai' && transaksi.isDelivery) {

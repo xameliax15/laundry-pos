@@ -1,0 +1,127 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Upload Bukti Pembayaran - Kurir" id="kurir-upload-bukti">
+    <mxGraphModel dx="970" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="loading" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Loading:&#xa;&#39;Uploading...&#39;" vertex="1">
+          <mxGeometry height="50" width="79" x="1161" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="decImage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loading" value="Ya">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1200" y="460" />
+              <mxPoint x="1200" y="500" />
+              <mxPoint x="1201" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="loading" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="uploadStorage" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pyJRxCuSyB6CdL2oufSJ-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="upload bukti pembayaran" vertex="1">
+          <mxGeometry height="1010" width="570" x="700.0000000000005" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="pyJRxCuSyB6CdL2oufSJ-2" parent="pyJRxCuSyB6CdL2oufSJ-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kurir" vertex="1">
+          <mxGeometry height="990" width="250" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="pyJRxCuSyB6CdL2oufSJ-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="109.99999999999955" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="clickUpload" parent="pyJRxCuSyB6CdL2oufSJ-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Upload Bukti&#xa;Pembayaran&#39; pada&#xa;Order COD Card" vertex="1">
+          <mxGeometry height="70" width="160" x="49.999999999999545" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickUpload" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pyJRxCuSyB6CdL2oufSJ-5" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-2" source="errPayment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="end2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="125" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="errPayment" parent="pyJRxCuSyB6CdL2oufSJ-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Terima pembayaran COD&#xa;terlebih dahulu&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="49.999999999999545" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="successNotif" parent="pyJRxCuSyB6CdL2oufSJ-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Bukti pembayaran&#xa;berhasil diupload&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="69.99999999999955" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="pyJRxCuSyB6CdL2oufSJ-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="129.99999999999955" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-2" source="successNotif" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end2" parent="pyJRxCuSyB6CdL2oufSJ-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="104.99999999999955" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="pyJRxCuSyB6CdL2oufSJ-3" parent="pyJRxCuSyB6CdL2oufSJ-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="990" width="320" x="250" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="checkPayment" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Decision:&#xa;Ada&#xa;Pembayaran?" vertex="1">
+          <mxGeometry height="100" width="100" x="119.99999999999955" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="imagePicker" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="ImagePicker.pickImage()&#xa;(pilih foto dari gallery/kamera)" vertex="1">
+          <mxGeometry height="60" width="190" x="74.99999999999955" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="checkPayment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="imagePicker" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="decImage" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Foto&#xa;Dipilih?" vertex="1">
+          <mxGeometry height="80" width="80" x="144.99999999999955" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="imagePicker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="decImage" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="310" />
+              <mxPoint x="185" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cancel" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Batal Upload" vertex="1">
+          <mxGeometry height="40" width="90" x="15" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="decImage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="cancel" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uploadStorage" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="_uploadBuktiPembayaran()&#xa;Upload to Supabase Storage:&#xa;bukti_pembayaran/&#xa;{transaksi_id}_{timestamp}.jpg" vertex="1">
+          <mxGeometry height="80" width="230" x="69.99999999999955" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="getURL" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Get Public URL&#xa;dari Supabase Storage" vertex="1">
+          <mxGeometry height="60" width="160" x="104.99999999999955" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="uploadStorage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="getURL" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="updateDB" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="UPDATE pembayaran&#xa;SET bukti_pembayaran = URL&#xa;WHERE transaksi_id = ..." vertex="1">
+          <mxGeometry height="70" width="200" x="84.99999999999955" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="getURL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="updateDB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadData" parent="pyJRxCuSyB6CdL2oufSJ-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_loadData()&#xa;(refresh dashboard)" vertex="1">
+          <mxGeometry height="60" width="160" x="104.99999999999955" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-3" source="updateDB" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="reloadData" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-1" source="clickUpload" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="checkPayment" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-1" source="checkPayment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="errPayment" value="Tidak">
+          <mxGeometry relative="1" x="-0.1343" y="-10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="390" y="220" />
+              <mxPoint x="130" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="pyJRxCuSyB6CdL2oufSJ-1" source="reloadData" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="successNotif" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

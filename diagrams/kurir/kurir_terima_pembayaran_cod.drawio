@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Terima Pembayaran COD - Kurir" id="kurir-terima-pembayaran">
+    <mxGraphModel dx="167" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XziBEB48wdfVXal1jht1-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="Pool" vertex="1">
+          <mxGeometry height="800" width="630" x="860.0000000000005" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="XziBEB48wdfVXal1jht1-2" parent="XziBEB48wdfVXal1jht1-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kurir" vertex="1">
+          <mxGeometry height="780" width="240" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="XziBEB48wdfVXal1jht1-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="119.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickTerima" parent="XziBEB48wdfVXal1jht1-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik FAB&#xa;&#39;Terima Pembayaran&#xa;COD&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="59.999999999999545" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="XziBEB48wdfVXal1jht1-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickTerima" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="selectOrder" parent="XziBEB48wdfVXal1jht1-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Pilih Order&#xa;dari List" vertex="1">
+          <mxGeometry height="60" width="160" x="39.999999999999545" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="showConfirm" parent="XziBEB48wdfVXal1jht1-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil Dialog Konfirmasi:&#xa;- Customer Name&#xa;- Total Harga&#xa;- Input amount (optional)" vertex="1">
+          <mxGeometry height="70" width="200" x="19.999999999999545" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="XziBEB48wdfVXal1jht1-2" source="selectOrder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showConfirm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="successNotif" parent="XziBEB48wdfVXal1jht1-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Pembayaran COD&#xa;berhasil diterima&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="49.999999999999545" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="XziBEB48wdfVXal1jht1-3" parent="XziBEB48wdfVXal1jht1-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="780" width="390" x="240" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="filterCOD" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Filter Order COD:&#xa;- isCOD = true&#xa;- status = &#39;dikirim&#39;&#xa;- belum ada pembayaran" vertex="1">
+          <mxGeometry height="70" width="200" x="129.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="decCOD" parent="XziBEB48wdfVXal1jht1-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Ada&#xa;Order&#xa;COD?" vertex="1">
+          <mxGeometry height="80" width="80" x="189.99999999999955" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="filterCOD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="decCOD" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XziBEB48wdfVXal1jht1-6" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="emptyState" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="end2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="emptyState" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Tidak ada order COD&#xa;yang perlu dibayarkan&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="209.99999999999955" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="decCOD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="emptyState" value="Tidak">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end2" parent="XziBEB48wdfVXal1jht1-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="269.99999999999955" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_terimaPembayaranCOD()&#xa;Tampil Dialog:&#xa;Daftar Order COD" vertex="1">
+          <mxGeometry height="70" width="160" x="29.999999999999545" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="decCOD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDialog" value="Ya">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="decConfirm" parent="XziBEB48wdfVXal1jht1-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Konfirmasi&#xa;Terima?" vertex="1">
+          <mxGeometry height="80" width="80" x="69.99999999999955" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="XziBEB48wdfVXal1jht1-7" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="end2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cancel" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tutup Dialog" vertex="1">
+          <mxGeometry height="50" width="110" x="180" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="decConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="cancel" value="Batal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="createPayment" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="INSERT INTO pembayaran:&#xa;- transaksi_id&#xa;- metode = &#39;cash&#39;&#xa;- status = &#39;lunas&#39;&#xa;- jumlah = totalHarga&#xa;- tanggal = now()" vertex="1">
+          <mxGeometry height="90" width="180" x="20" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="decConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="createPayment" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadData" parent="XziBEB48wdfVXal1jht1-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_loadData()&#xa;(refresh dashboard)" vertex="1">
+          <mxGeometry height="60" width="160" x="29.999999999999545" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="XziBEB48wdfVXal1jht1-3" source="createPayment" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="reloadData" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="XziBEB48wdfVXal1jht1-1" source="clickTerima" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="filterCOD" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="XziBEB48wdfVXal1jht1-1" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="selectOrder" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="XziBEB48wdfVXal1jht1-1" source="showConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="decConfirm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="XziBEB48wdfVXal1jht1-1" source="reloadData" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="successNotif" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="970" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="successNotif" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

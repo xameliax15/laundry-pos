@@ -1,0 +1,110 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Login - Kurir" id="kurir-login">
+    <mxGraphModel dx="994" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="inputCred" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Input:&#xa;- Email/Username&#xa;- Password" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="loginPage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="inputCred" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="clickLogin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Login&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="inputCred" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickLogin" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="authLogin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="AuthService.login()&#xa;(authenticate user)" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="clickLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="authLogin" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Valid&#xa;Credentials?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="authLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Role =&#xa;&#39;kurir&#39;?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="navDash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Navigator.pushReplacementNamed&#xa;(AppRoutes.kurirDashboard)" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="navDash" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errCred" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Email atau password salah&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="errCred" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errRole" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Akses ditolak.&#xa;Anda bukan Kurir&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="errRole" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="backLogin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Kembali ke&#xa;Login Page" vertex="1">
+          <mxGeometry height="50" width="120" x="460" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="errCred" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="backLogin" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="530" />
+              <mxPoint x="520" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="errRole" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="backLogin" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="650" />
+              <mxPoint x="640" y="650" />
+              <mxPoint x="640" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="backLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loginPage" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="220" />
+              <mxPoint x="300" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="280" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="navDash" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3bSOpsofTGsSjOn2j3wJ-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="Pool" vertex="1">
+          <mxGeometry height="480" width="450" x="750" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="3bSOpsofTGsSjOn2j3wJ-2" parent="3bSOpsofTGsSjOn2j3wJ-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="Lane 1" vertex="1">
+          <mxGeometry height="460" width="190" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="3bSOpsofTGsSjOn2j3wJ-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="77" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="loginPage" parent="3bSOpsofTGsSjOn2j3wJ-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil Login Page" vertex="1">
+          <mxGeometry height="60" width="160" x="17" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="3bSOpsofTGsSjOn2j3wJ-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loginPage" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3bSOpsofTGsSjOn2j3wJ-3" parent="3bSOpsofTGsSjOn2j3wJ-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="Lane 2" vertex="1">
+          <mxGeometry height="460" width="260" x="190" y="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

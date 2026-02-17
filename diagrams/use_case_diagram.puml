@@ -1,0 +1,154 @@
+@startuml UseCase_LaundryPOS
+!theme plain
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #FEFEFE
+  BorderColor #333333
+  ArrowColor #333333
+}
+
+title Use Case Diagram - Sistem POS Laundry Trias Laundry
+
+' ==== ACTORS ====
+actor "Owner" as owner #LightBlue
+actor "Kasir" as kasir #LightGreen
+actor "Kurir" as kurir #LightYellow
+actor "Supabase\n(Backend)" as supabase #LightGray
+
+' ==== SYSTEM BOUNDARY ====
+rectangle "Sistem POS Laundry Trias Laundry" {
+
+  ' ==== AUTHENTICATION USE CASES ====
+  package "Autentikasi" {
+    usecase "Login" as UC_LOGIN
+    usecase "Logout" as UC_LOGOUT
+    usecase "Reset Password" as UC_RESET_PASSWORD
+  }
+
+  ' ==== KASIR USE CASES ====
+  package "Modul Kasir" {
+    usecase "Akses Dashboard Kasir" as UC_KASIR_DASHBOARD
+    usecase "Terima Laundry Baru" as UC_TERIMA_LAUNDRY
+    usecase "Kelola Transaksi" as UC_KELOLA_TRANSAKSI
+    usecase "Update Status Transaksi" as UC_UPDATE_STATUS
+    usecase "Input Pembayaran" as UC_INPUT_PEMBAYARAN
+    usecase "Cetak Struk" as UC_CETAK_STRUK
+    usecase "Lihat Riwayat Transaksi" as UC_RIWAYAT_TRANSAKSI
+    usecase "Kelola Data Pelanggan" as UC_KELOLA_PELANGGAN
+    usecase "Assign Kurir" as UC_ASSIGN_KURIR
+    usecase "Generate QRIS" as UC_GENERATE_QRIS
+  }
+
+  ' ==== KURIR USE CASES ====
+  package "Modul Kurir" {
+    usecase "Akses Dashboard Kurir" as UC_KURIR_DASHBOARD
+    usecase "Lihat Order Pengiriman" as UC_LIHAT_ORDER
+    usecase "Mulai Pengiriman" as UC_MULAI_PENGIRIMAN
+    usecase "Update Status Pengiriman" as UC_UPDATE_PENGIRIMAN
+    usecase "Terima Pembayaran COD" as UC_COD
+    usecase "Lihat Riwayat Pengiriman" as UC_RIWAYAT_PENGIRIMAN
+  }
+
+  ' ==== OWNER USE CASES ====
+  package "Modul Owner" {
+    usecase "Akses Dashboard Owner" as UC_OWNER_DASHBOARD
+    usecase "Lihat Total Omzet" as UC_LIHAT_OMZET
+    usecase "Lihat Grafik Pendapatan" as UC_GRAFIK_PENDAPATAN
+    usecase "Kelola User" as UC_KELOLA_USER
+    usecase "Verifikasi Pembayaran COD" as UC_VERIFIKASI_COD
+    usecase "Lihat Laporan" as UC_LIHAT_LAPORAN
+    usecase "Monitoring Kasir & Kurir" as UC_MONITORING
+    usecase "Reset Riwayat Transaksi" as UC_RESET_RIWAYAT
+  }
+
+  ' ==== BACKEND USE CASES ====
+  package "Integrasi Backend" {
+    usecase "Autentikasi User" as UC_AUTH_USER
+    usecase "Simpan Transaksi" as UC_SIMPAN_TRANSAKSI
+    usecase "Proses Pembayaran QRIS" as UC_PROSES_QRIS
+    usecase "Log Aktivitas" as UC_LOG_AKTIVITAS
+  }
+}
+
+' ==== KASIR RELATIONSHIPS ====
+kasir --> UC_LOGIN
+kasir --> UC_LOGOUT
+kasir --> UC_KASIR_DASHBOARD
+kasir --> UC_TERIMA_LAUNDRY
+kasir --> UC_KELOLA_TRANSAKSI
+kasir --> UC_INPUT_PEMBAYARAN
+kasir --> UC_CETAK_STRUK
+kasir --> UC_RIWAYAT_TRANSAKSI
+kasir --> UC_KELOLA_PELANGGAN
+kasir --> UC_ASSIGN_KURIR
+
+' ==== KURIR RELATIONSHIPS ====
+kurir --> UC_LOGIN
+kurir --> UC_LOGOUT
+kurir --> UC_KURIR_DASHBOARD
+kurir --> UC_LIHAT_ORDER
+kurir --> UC_MULAI_PENGIRIMAN
+kurir --> UC_COD
+kurir --> UC_RIWAYAT_PENGIRIMAN
+
+' ==== OWNER RELATIONSHIPS ====
+owner --> UC_LOGIN
+owner --> UC_LOGOUT
+owner --> UC_OWNER_DASHBOARD
+owner --> UC_LIHAT_OMZET
+owner --> UC_GRAFIK_PENDAPATAN
+owner --> UC_KELOLA_USER
+owner --> UC_VERIFIKASI_COD
+owner --> UC_LIHAT_LAPORAN
+owner --> UC_MONITORING
+owner --> UC_RESET_RIWAYAT
+
+' ==== BACKEND RELATIONSHIPS ====
+UC_LOGIN ..> UC_AUTH_USER : <<include>>
+UC_TERIMA_LAUNDRY ..> UC_SIMPAN_TRANSAKSI : <<include>>
+UC_INPUT_PEMBAYARAN ..> UC_GENERATE_QRIS : <<extend>>
+UC_GENERATE_QRIS ..> UC_PROSES_QRIS : <<include>>
+UC_KELOLA_TRANSAKSI ..> UC_UPDATE_STATUS : <<include>>
+UC_MULAI_PENGIRIMAN ..> UC_UPDATE_PENGIRIMAN : <<include>>
+UC_LOGIN ..> UC_LOG_AKTIVITAS : <<include>>
+UC_UPDATE_STATUS ..> UC_LOG_AKTIVITAS : <<include>>
+
+' ==== SUPABASE RELATIONSHIPS ====
+supabase --> UC_AUTH_USER
+supabase --> UC_SIMPAN_TRANSAKSI
+supabase --> UC_PROSES_QRIS
+supabase --> UC_LOG_AKTIVITAS
+
+' ==== NOTES ====
+note right of UC_LOGIN
+  Route: /login
+  Semua aktor dapat
+  mengakses halaman login
+end note
+
+note right of UC_KASIR_DASHBOARD
+  Route: /kasir
+end note
+
+note right of UC_RIWAYAT_TRANSAKSI
+  Route: /kasir/riwayat
+end note
+
+note right of UC_KELOLA_PELANGGAN
+  Route: /kasir/pelanggan
+end note
+
+note right of UC_KURIR_DASHBOARD
+  Route: /kurir
+end note
+
+note right of UC_RIWAYAT_PENGIRIMAN
+  Route: /kurir/riwayat
+end note
+
+note right of UC_OWNER_DASHBOARD
+  Route: /owner
+end note
+
+@enduml

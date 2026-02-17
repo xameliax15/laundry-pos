@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Logout - Owner" id="logout-owner">
+    <mxGraphModel dx="832" dy="1220" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UxmI4u5DdBy_KvR99hfG-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;" value="logout" vertex="1">
+          <mxGeometry height="580" width="630" x="710" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UxmI4u5DdBy_KvR99hfG-2" parent="UxmI4u5DdBy_KvR99hfG-1" style="swimlane;startSize=20;html=1;" value="owner" vertex="1">
+          <mxGeometry height="560" width="270" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="UxmI4u5DdBy_KvR99hfG-2" style="ellipse;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="114.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickLogout" parent="UxmI4u5DdBy_KvR99hfG-2" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik &#39;Keluar/Logout&#39;&#xa;dari Sidebar" vertex="1">
+          <mxGeometry height="60" width="160" x="54.999999999999545" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="UxmI4u5DdBy_KvR99hfG-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="clickLogout" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UxmI4u5DdBy_KvR99hfG-6" edge="1" parent="UxmI4u5DdBy_KvR99hfG-2" source="navLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="navLogin" parent="UxmI4u5DdBy_KvR99hfG-2" style="rounded=1;whiteSpace=wrap;html=1;" value="Redirect ke halaman login" vertex="1">
+          <mxGeometry height="50" width="160" x="55" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="UxmI4u5DdBy_KvR99hfG-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="114.99999999999955" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="UxmI4u5DdBy_KvR99hfG-3" parent="UxmI4u5DdBy_KvR99hfG-1" style="swimlane;startSize=20;html=1;" value="system" vertex="1">
+          <mxGeometry height="560" width="360" x="270" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="UxmI4u5DdBy_KvR99hfG-5" edge="1" parent="UxmI4u5DdBy_KvR99hfG-3" source="appRoutesLogout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="authLogout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="appRoutesLogout" parent="UxmI4u5DdBy_KvR99hfG-3" style="rounded=1;whiteSpace=wrap;html=1;" value="AppRoutes.logout(context)" vertex="1">
+          <mxGeometry height="60" width="160" x="99.99999999999955" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="authLogout" parent="UxmI4u5DdBy_KvR99hfG-3" style="rounded=1;whiteSpace=wrap;html=1;" value="AuthService().logout()&#xa;(Supabase sign out)" vertex="1">
+          <mxGeometry height="60" width="160" x="99.99999999999955" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="clearSession" parent="UxmI4u5DdBy_KvR99hfG-3" style="rounded=1;whiteSpace=wrap;html=1;align=left;" value="Clear Session:&#xa;- Hapus JWT token&#xa;- Clear _currentUser&#xa;- Set _isLoggedIn = false" vertex="1">
+          <mxGeometry height="70" width="180" x="90" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="UxmI4u5DdBy_KvR99hfG-3" source="authLogout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="clearSession" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="logActivity" parent="UxmI4u5DdBy_KvR99hfG-3" style="rounded=1;whiteSpace=wrap;html=1;" value="AuthService.logActivity()&#xa;(catat logout ke&#xa;activity_logs)" vertex="1">
+          <mxGeometry height="50" width="160" x="100" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="UxmI4u5DdBy_KvR99hfG-3" source="clearSession" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="logActivity" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="UxmI4u5DdBy_KvR99hfG-1" source="clickLogout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="appRoutesLogout" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="UxmI4u5DdBy_KvR99hfG-1" source="logActivity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="navLogin" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

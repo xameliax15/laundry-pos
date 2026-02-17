@@ -1,0 +1,155 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Reset Riwayat - Owner" id="reset-riwayat-owner">
+    <mxGraphModel dx="788" dy="2389" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="reset riwayat" vertex="1">
+          <mxGeometry height="1160" width="800" x="550.0000000000005" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-2" parent="ry0gdSkO8BXDv3cch0ZG-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="owner" vertex="1">
+          <mxGeometry height="1140" width="330" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="ry0gdSkO8BXDv3cch0ZG-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="94.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickReset" parent="ry0gdSkO8BXDv3cch0ZG-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Reset Riwayat&#39;&#xa;dari Dashboard" vertex="1">
+          <mxGeometry height="60" width="160" x="34.999999999999545" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickReset" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showConfirm" parent="ry0gdSkO8BXDv3cch0ZG-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampil Dialog Konfirmasi:&#xa;&#39;Reset Riwayat Transaksi&#39;&#xa;dengan warning &amp; info:&#xa;- Total Transaksi&#xa;- Detail Laundry&#xa;- Pembayaran&#xa;- Order Kurir&#xa;NOTE: Customer TIDAK dihapus" vertex="1">
+          <mxGeometry height="130" width="230" x="39.999999999999545" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-3" parent="ry0gdSkO8BXDv3cch0ZG-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="1140" width="470" x="330" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_showResetRiwayatDialog()" vertex="1">
+          <mxGeometry height="50" width="160" x="60" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="getTotal" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="getTotalTransaksiCount()&#xa;(hitung total transaksi)" vertex="1">
+          <mxGeometry height="50" width="160" x="60" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="getTotal" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Pilih&#xa;&#39;Ya,&#xa;Reset&#39;?" vertex="1">
+          <mxGeometry height="80" width="80" x="119.99999999999955" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="resetFunc" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_resetRiwayat()&#xa;(mulai proses reset)" vertex="1">
+          <mxGeometry height="40" width="140" x="90" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="resetFunc" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-6" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="deleteOrderKurir" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="merge1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteOrderKurir" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="DELETE FROM&#xa;order_kurir&#xa;(hapus semua order kurir)" vertex="1">
+          <mxGeometry height="70" width="130" x="10" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="deleteOrderKurir" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deletePembayaran" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="DELETE FROM&#xa;pembayaran&#xa;(hapus semua pembayaran)" vertex="1">
+          <mxGeometry height="70" width="140" x="149.99999999999955" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="deletePembayaran" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-5" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="deleteDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;" target="merge1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteDetail" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="DELETE FROM&#xa;detail_laundry&#xa;(hapus semua detail)" vertex="1">
+          <mxGeometry height="75" width="130" x="300" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="deleteDetail" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cancel" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tutup Dialog&#xa;(tetap di dashboard)" vertex="1">
+          <mxGeometry height="60" width="140" x="269.99999999999955" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="cancel" value="Batal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end2" parent="ry0gdSkO8BXDv3cch0ZG-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="320.99999999999955" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="merge1" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="204.99999999999955" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="deletePembayaran" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-7" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="deleteTransaksi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontColor=default;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteTransaksi" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="DELETE FROM&#xa;transaksi&#xa;(hapus semua transaksi)&#xa;NOTE: Customer tetap ada" vertex="1">
+          <mxGeometry height="80" width="170" x="134.99999999999955" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="merge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="deleteTransaksi" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="loading" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="CircularProgressIndicator&#xa;&#39;Mereset riwayat...&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="139.99999999999955" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="deleteTransaksi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loading" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errorNotif" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Gagal mereset riwayat.&#xa;Error: [message]&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="289.99999999999955" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Reset&#xa;Berhasil?" vertex="1">
+          <mxGeometry height="80" width="80" x="179.99999999999955" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="loading" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="errorNotif" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="successNotif" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Riwayat berhasil direset&#39;" vertex="1">
+          <mxGeometry height="40" width="130" x="20" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="successNotif" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadData" parent="ry0gdSkO8BXDv3cch0ZG-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_loadData()&#xa;(refresh dashboard)" vertex="1">
+          <mxGeometry height="60" width="160" x="29.999999999999545" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="successNotif" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="reloadData" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="950" />
+              <mxPoint x="110" y="950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end" parent="ry0gdSkO8BXDv3cch0ZG-3" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="89.99999999999955" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-3" source="reloadData" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-1" source="clickReset" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-1" source="getTotal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showConfirm" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="230" />
+              <mxPoint x="155" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="ry0gdSkO8BXDv3cch0ZG-1" source="showConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

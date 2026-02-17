@@ -11,13 +11,13 @@ class SkeletonLoader extends StatefulWidget {
   final Curve? curve;
 
   const SkeletonLoader({
-    Key? key,
+    super.key,
     required this.width,
     required this.height,
     this.borderRadius,
     this.margin,
     this.curve,
-  }) : super(key: key);
+  });
 
   @override
   State<SkeletonLoader> createState() => _SkeletonLoaderState();
@@ -68,10 +68,10 @@ class ShimmerEffect extends StatelessWidget {
   final Widget child;
 
   const ShimmerEffect({
-    Key? key,
+    super.key,
     required this.animation,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +104,9 @@ class TransactionCardSkeleton extends StatelessWidget {
   final EdgeInsets? margin;
 
   const TransactionCardSkeleton({
-    Key? key,
+    super.key,
     this.margin,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +159,9 @@ class StatsCardSkeleton extends StatelessWidget {
   final EdgeInsets? margin;
 
   const StatsCardSkeleton({
-    Key? key,
+    super.key,
     this.margin,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -218,10 +218,10 @@ class TableRowSkeleton extends StatelessWidget {
   final EdgeInsets? margin;
 
   const TableRowSkeleton({
-    Key? key,
+    super.key,
     this.columnCount = 4,
     this.margin,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -260,9 +260,9 @@ class InputFieldSkeleton extends StatelessWidget {
   final EdgeInsets? margin;
 
   const InputFieldSkeleton({
-    Key? key,
+    super.key,
     this.margin,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -297,11 +297,11 @@ class ListViewSkeleton extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ListViewSkeleton({
-    Key? key,
+    super.key,
     this.itemCount = 5,
     this.isTransactionType = true,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -330,9 +330,9 @@ class PageSkeleton extends StatelessWidget {
   final EdgeInsets? padding;
 
   const PageSkeleton({
-    Key? key,
+    super.key,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

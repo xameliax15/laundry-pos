@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Detail Isi Laundry - Kasir" id="detail-isi-kasir">
+    <mxGraphModel dx="1259" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="showFoto" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Tap foto →&#xa;Preview fullscreen&#xa;(dari Supabase Storage URL)" vertex="1">
+          <mxGeometry height="70" width="160" x="220" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="showFoto" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="noFoto" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Skip preview" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="noFoto" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="closePreview" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Tap outside →&#xa;Close preview" vertex="1">
+          <mxGeometry height="50" width="160" x="220" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="showFoto" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="closePreview" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="closeDialog" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Klik &#39;Tutup&#39;" vertex="1">
+          <mxGeometry height="50" width="160" x="220" y="1190" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="closePreview" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="closeDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="noFoto" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="closeDialog" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="1215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="280" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="closeDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_hQfpATQWMsIrV4PS8be-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;" value="Pool" vertex="1">
+          <mxGeometry height="540" width="560" x="630.0000000000005" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="_hQfpATQWMsIrV4PS8be-1" source="clickDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="loadTrx" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="_hQfpATQWMsIrV4PS8be-1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="selectTrx" value="Ya">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="220" />
+              <mxPoint x="200" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="_hQfpATQWMsIrV4PS8be-1" source="selectTrx" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="getDetail" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="290" />
+              <mxPoint x="290" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_hQfpATQWMsIrV4PS8be-2" parent="_hQfpATQWMsIrV4PS8be-1" style="swimlane;startSize=20;html=1;" value="Lane 1" vertex="1">
+          <mxGeometry height="520" width="290" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="_hQfpATQWMsIrV4PS8be-2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="89.99999999999955" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="clickDetail" parent="_hQfpATQWMsIrV4PS8be-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Klik &#39;Detail Isi Laundry&#39;" vertex="1">
+          <mxGeometry height="30" width="130" x="45" y="92.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="_hQfpATQWMsIrV4PS8be-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="clickDetail" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="selectTrx" parent="_hQfpATQWMsIrV4PS8be-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="User pilih transaksi&#xa;dari list" vertex="1">
+          <mxGeometry height="50" width="110" x="65" y="175" as="geometry" />
+        </mxCell>
+        <mxCell id="showDetail" parent="_hQfpATQWMsIrV4PS8be-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;" value="Tampil Detail Dialog:&#xa;- No Transaksi&#xa;- Customer name, phone&#xa;- Status transaksi&#xa;- List detail items:&#xa;  • Jenis layanan&#xa;  • Jenis barang&#xa;  • Jumlah/Berat/Luas&#xa;  • Catatan&#xa;  • Foto (preview jika ada)&#xa;- Total harga" vertex="1">
+          <mxGeometry height="160" width="183" x="40" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="_hQfpATQWMsIrV4PS8be-3" parent="_hQfpATQWMsIrV4PS8be-1" style="swimlane;startSize=20;html=1;" value="Lane 2" vertex="1">
+          <mxGeometry height="520" width="270" x="290" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="loadTrx" parent="_hQfpATQWMsIrV4PS8be-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Load transaksi list&#xa;(pending/proses)" vertex="1">
+          <mxGeometry height="45" width="115" x="60" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="_hQfpATQWMsIrV4PS8be-3" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Ada&#xa;Transaksi?" vertex="1">
+          <mxGeometry height="80" width="80" x="77.49999999999955" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="_hQfpATQWMsIrV4PS8be-3" source="loadTrx" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="noTrx" parent="_hQfpATQWMsIrV4PS8be-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Snackbar:&#xa;&#39;Belum ada transaksi&#39;" vertex="1">
+          <mxGeometry height="40" width="110" x="160" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="_hQfpATQWMsIrV4PS8be-3" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="noTrx" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end2" parent="_hQfpATQWMsIrV4PS8be-3" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="194.99999999999955" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="_hQfpATQWMsIrV4PS8be-3" source="noTrx" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="getDetail" parent="_hQfpATQWMsIrV4PS8be-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="getDetailLaundryBy&#xa;TransaksiId()&#xa;(dari database)" vertex="1">
+          <mxGeometry height="50" width="130" x="10" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="_hQfpATQWMsIrV4PS8be-1" source="getDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="showDetail" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="261" y="355" />
+              <mxPoint x="261" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Ada&#xa;foto item?" vertex="1">
+          <mxGeometry height="80" width="80" x="920" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="showDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

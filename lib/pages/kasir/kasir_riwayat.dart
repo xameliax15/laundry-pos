@@ -6,11 +6,19 @@ import '../../models/detail_laundry.dart';
 import '../../core/routes.dart';
 import '../../core/logger.dart';
 import '../../services/transaksi_service.dart';
+import '../../services/print_service.dart';
+import '../../services/status_log_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/sidebar_layout.dart';
+import '../../models/user.dart' as app_user;
+import '../owner/user_management_page.dart';
 
 class KasirRiwayat extends StatefulWidget {
-  const KasirRiwayat({super.key});
+  final bool isEmbedded;
+  final String? userRole;
+  
+  const KasirRiwayat({super.key, this.isEmbedded = false, this.userRole});
 
   @override
   State<KasirRiwayat> createState() => _KasirRiwayatState();
@@ -35,8 +43,31 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    // Move _loadData to didChangeDependencies to read arguments
     _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Check arguments only once
+    if (!_isFiltered && _filterStatus == null) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is String) {
+        if (args == 'active') {
+          _filterStatus = 'active'; // Ongoing orders: pending, proses, selesai, dikirim
+          _isFiltered = true;
+        } else if (args == 'history') {
+          _filterStatus = 'history'; // Completed orders only: diterima
+          _isFiltered = true;
+        } else if (['pending', 'proses', 'selesai', 'dikirim', 'diterima'].contains(args)) {
+          _filterStatus = args;
+          _isFiltered = true;
+        }
+      }
+      _loadData();
+    }
   }
 
   @override
@@ -79,11 +110,45 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
         }
       } else if (_isFiltered) {
         // Jika hanya filter tanpa search
-        transaksiList = await _transaksiService.filterTransaksi(
-          status: _filterStatus,
-          startDate: _filterStartDate,
-          endDate: _filterEndDate,
-        );
+        if (_filterStatus == 'active') {
+           // Active/Ongoing orders: pending, proses, selesai, dikirim (NOT diterima)
+           final all = await _transaksiService.getAllTransaksi();
+           transaksiList = all.where((t) => ['pending', 'proses', 'selesai', 'dikirim'].contains(t.status)).toList();
+           
+           // Apply date filter if exists
+           if (_filterStartDate != null || _filterEndDate != null) {
+              transaksiList = transaksiList.where((t) {
+                if (_filterStartDate != null && t.tanggalMasuk.isBefore(_filterStartDate!)) return false;
+                if (_filterEndDate != null) {
+                  final endDate = DateTime(_filterEndDate!.year, _filterEndDate!.month, _filterEndDate!.day, 23, 59, 59);
+                   if (t.tanggalMasuk.isAfter(endDate)) return false;
+                }
+                return true;
+              }).toList();
+           }
+        } else if (_filterStatus == 'history') {
+           // History/Completed orders: only 'diterima' status
+           final all = await _transaksiService.getAllTransaksi();
+           transaksiList = all.where((t) => t.status == 'diterima').toList();
+           
+           // Apply date filter if exists
+           if (_filterStartDate != null || _filterEndDate != null) {
+              transaksiList = transaksiList.where((t) {
+                if (_filterStartDate != null && t.tanggalMasuk.isBefore(_filterStartDate!)) return false;
+                if (_filterEndDate != null) {
+                  final endDate = DateTime(_filterEndDate!.year, _filterEndDate!.month, _filterEndDate!.day, 23, 59, 59);
+                   if (t.tanggalMasuk.isAfter(endDate)) return false;
+                }
+                return true;
+              }).toList();
+           }
+        } else {
+          transaksiList = await _transaksiService.filterTransaksi(
+            status: _filterStatus,
+            startDate: _filterStartDate,
+            endDate: _filterEndDate,
+          );
+        }
       } else {
         // Load semua transaksi (bukan hanya hari ini)
         transaksiList = await _transaksiService.getAllTransaksi();
@@ -114,6 +179,47 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
 
   @override
   Widget build(BuildContext context) {
+    // If embedded in another page, return just the content
+    if (widget.isEmbedded) {
+      return _buildEmbeddedLayout();
+    }
+    
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 768) {
+          return _buildMobileLayout();
+        } else {
+          return _buildDesktopLayout();
+        }
+      },
+    );
+  }
+
+  Widget _buildEmbeddedLayout() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Riwayat Pesanan'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _showFilterDialog,
+          ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _showSearchDialog,
+          ),
+        ],
+      ),
+      body: _buildContent(),
+    );
+  }
+
+
+  Widget _buildDesktopLayout() {
+    // Determine if this is being used by owner or kasir
+    final isOwner = widget.userRole == 'owner';
+    
     return SidebarLayout(
       title: 'Riwayat Transaksi',
       headerActions: [
@@ -128,7 +234,40 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
           tooltip: 'Pencarian',
         ),
       ],
-      items: [
+      items: isOwner ? [
+        // Owner sidebar items
+        SidebarItem(
+          label: 'Dashboard',
+          icon: Icons.dashboard_rounded,
+          onTap: () => Navigator.of(context)
+              .pushReplacementNamed(AppRoutes.ownerDashboard),
+        ),
+        SidebarItem(
+          label: 'Manajemen User',
+          icon: Icons.people,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserManagementPage(),
+              ),
+            );
+          },
+        ),
+        SidebarItem(
+          label: 'Riwayat Pesanan',
+          icon: Icons.history,
+          isActive: true,
+          onTap: () {},
+        ),
+        SidebarItem(
+          label: 'Keluar',
+          icon: Icons.logout,
+          isDestructive: true,
+          onTap: () => AppRoutes.logout(context),
+        ),
+      ] : [
+        // Kasir sidebar items
         SidebarItem(
           label: 'Dashboard',
           icon: Icons.dashboard_rounded,
@@ -142,19 +281,77 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
           onTap: () {},
         ),
         SidebarItem(
-          label: 'Buat Transaksi',
-          icon: Icons.add_circle_outline,
-          onTap: () => Navigator.of(context)
-              .pushReplacementNamed(AppRoutes.kasirDashboard),
-        ),
-        SidebarItem(
           label: 'Keluar',
           icon: Icons.logout,
           isDestructive: true,
           onTap: () => AppRoutes.logout(context),
         ),
       ],
-      body: isLoading
+      body: _buildContent(),
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    // Determine title and currentIndex based on filter status
+    final isOrdersPage = _filterStatus == 'active';
+    final isHistoryPage = _filterStatus == 'history';
+    final pageTitle = isOrdersPage 
+        ? 'Pesanan Berlangsung' 
+        : (isHistoryPage ? 'Riwayat Selesai' : 'Riwayat Transaksi');
+    final currentNavIndex = isOrdersPage ? 1 : (isHistoryPage ? 3 : 3);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(pageTitle),
+        automaticallyImplyLeading: false, // Remove back button for consistency
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _showFilterDialog,
+          ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _showSearchDialog,
+          ),
+        ],
+      ),
+      body: _buildContent(),
+      bottomNavigationBar: MobileBottomNavBar(
+        currentIndex: currentNavIndex,
+        onTap: (index) {
+          if (index == 0) {
+            // Home - Dashboard
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.kasirDashboard, (route) => false);
+          } else if (index == 1) {
+            // Orders - Navigate to Orders page
+            Navigator.of(context).pushReplacementNamed(AppRoutes.kasirOrders);
+          } else if (index == 2) {
+            // Customers
+            Navigator.of(context).pushReplacementNamed(AppRoutes.kasirPelanggan);
+          } else if (index == 3) {
+            // History - Completed
+            if (!isHistoryPage) {
+              Navigator.of(context).pushReplacementNamed(
+                  AppRoutes.kasirRiwayat, arguments: 'history');
+            }
+          }
+        },
+        onFabTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.kasirDashboard, (route) => false),
+        items: const [
+          MobileNavItem(icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home'),
+          MobileNavItem(icon: Icons.shopping_bag_outlined, activeIcon: Icons.shopping_bag, label: 'Orders'),
+          MobileNavItem(icon: Icons.people_outline, activeIcon: Icons.people, label: 'Customers'),
+          MobileNavItem(icon: Icons.history_outlined, activeIcon: Icons.history, label: 'History'),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildContent() {
+    return isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _loadData,
@@ -178,8 +375,7 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
                   ],
                 ),
               ),
-            ),
-    );
+            );
   }
 
   Widget _buildSearchBar() {
@@ -455,7 +651,10 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
                   );
                 }
                 
-                final pembayaranList = snapshot.data ?? [];
+                final pembayaranListRaw = snapshot.data ?? [];
+                // Filter unique by ID (Fix Duplicate Display)
+                final seenIds = <String>{};
+                final pembayaranList = pembayaranListRaw.where((p) => seenIds.add(p.id)).toList();
                 final totalPembayaran = pembayaranList
                     .where((p) => p.status == 'lunas')
                     .fold<double>(0.0, (sum, p) => sum + p.jumlah);
@@ -622,6 +821,34 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
                 ),
               ),
             ],
+            
+            const SizedBox(height: 16),
+            const Divider(),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () => _showStatusLogDialog(transaksi.id),
+                  icon: const Icon(Icons.history, size: 18),
+                  label: const Text('Status Log'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.grey[700],
+                    side: BorderSide(color: Colors.grey[300]!),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => PrintService.showPrintDialog(context, transaksi),
+                  icon: const Icon(Icons.print, size: 18),
+                  label: const Text('Cetak Struk'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.brandBlue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -753,6 +980,76 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
     );
   }
 
+  Future<void> _showStatusLogDialog(String transaksiId) async {
+    final statusLogService = StatusLogService();
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final logs = await statusLogService.getStatusHistory(transaksiId);
+      
+      if (!mounted) return;
+      Navigator.pop(context); // Dismiss loading
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Riwayat Status'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: logs.isEmpty
+                ? const Center(child: Text('Belum ada riwayat status'))
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: logs.length,
+                    itemBuilder: (context, index) {
+                      final log = logs[index];
+                      return ListTile(
+                        leading: const Icon(Icons.history, color: AppColors.brandBlue),
+                        title: Text(_formatStatus(log.newStatus)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Dari: ${_formatStatus(log.oldStatus)}'),
+                            Text('Oleh: ${log.changedByName ?? "Unknown"}'),
+                            Text(
+                              _formatDateTime(log.changedAt),
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                            if (log.notes != null && log.notes!.isNotEmpty)
+                              Text(
+                                'Catatan: ${log.notes}',
+                                style: const TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                          ],
+                        ),
+                        isThreeLine: true,
+                      );
+                    },
+                  ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (mounted) Navigator.pop(context); // Dismiss loading
+      logger.e('Error showing status logs', error: e);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memuat riwayat: $e')),
+        );
+      }
+    }
+  }
   Widget _buildImageWidget(String imagePath) {
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       // URL dari Supabase
@@ -1061,6 +1358,173 @@ class _KasirRiwayatState extends State<KasirRiwayat> {
                 _loadData();
               },
               child: const Text('Terapkan'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  void _showUpdateStatusDialog(Transaksi transaksi) async {
+    // Tentukan status berikutnya yang valid
+    List<String> nextStatuses = [];
+    
+    switch (transaksi.status) {
+      case 'pending':
+        nextStatuses = ['proses'];
+        break;
+      case 'proses':
+        nextStatuses = ['selesai'];
+        break;
+      case 'selesai':
+        if (!transaksi.isDelivery) {
+          nextStatuses = ['diterima'];
+        } else {
+          nextStatuses = [];
+        }
+        break;
+      case 'dikirim':
+        nextStatuses = ['diterima'];
+        break;
+      default:
+        nextStatuses = [];
+    }
+
+    if (nextStatuses.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Status tidak dapat diubah lagi'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    String? selectedStatus;
+    String? selectedKurirId;
+
+    // Load kurir jika transaksi delivery akan diset ke selesai
+    List<app_user.User> kurirList = [];
+    if (transaksi.isDelivery &&
+        (transaksi.status == 'proses' || transaksi.status == 'selesai')) {
+      try {
+        kurirList = await _transaksiService.getAvailableKurir();
+      } catch (e) {
+        print('Error loading kurir: $e');
+      }
+    }
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Update Status Transaksi'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Transaksi: ${transaksi.id}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text('Status Saat Ini: ${_formatStatus(transaksi.status)}'),
+                const SizedBox(height: 16),
+                const Text(
+                  'Pilih Status Baru:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...nextStatuses.map((status) => RadioListTile<String>(
+                      title: Text(_formatStatus(status)),
+                      value: status,
+                      groupValue: selectedStatus,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedStatus = value;
+                        if (value != 'selesai') {
+                          selectedKurirId = null;
+                        }
+                        });
+                      },
+                    )),
+                // Pilih kurir jika status selesai dan delivery
+                if (selectedStatus == 'selesai' && transaksi.isDelivery && kurirList.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Pilih Kurir:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    value: selectedKurirId,
+                    decoration: const InputDecoration(
+                      labelText: 'Kurir',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: kurirList.map<DropdownMenuItem<String>>((kurir) {
+                      return DropdownMenuItem<String>(
+                        value: kurir.id,
+                        child: Text('${kurir.username} (${kurir.phone ?? ''})'),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selectedKurirId = value;
+                      });
+                    },
+                  ),
+                ],
+                if (selectedStatus == 'selesai' && transaksi.isDelivery && kurirList.isEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    'Tidak ada kurir yang tersedia',
+                    style: TextStyle(color: Colors.orange[700], fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: selectedStatus == null ||
+                      (selectedStatus == 'selesai' && transaksi.isDelivery && selectedKurirId == null)
+                  ? null
+                  : () async {
+                      try {
+                        await _transaksiService.updateStatusTransaksi(
+                          transaksi.id,
+                          selectedStatus!,
+                          kurirId: selectedKurirId,
+                          isDelivery: transaksi.isDelivery,
+                        );
+
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Status berhasil diupdate menjadi ${_formatStatus(selectedStatus!)}',
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        // Reload data
+                        _loadData(); // Function di KasirRiwayat state
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+              child: const Text('Update'),
             ),
           ],
         ),

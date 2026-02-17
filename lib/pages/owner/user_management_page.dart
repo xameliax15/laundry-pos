@@ -4,10 +4,18 @@ import '../../models/activity_log.dart';
 import '../../services/user_service.dart';
 import '../../services/auth_service.dart';
 import '../../core/constants.dart';
+import '../../core/routes.dart';
 import '../../core/logger.dart';
+import '../../widgets/sidebar_layout.dart';
+import '../kasir/kasir_riwayat.dart';
 
 class UserManagementPage extends StatefulWidget {
-  const UserManagementPage({super.key});
+  final bool isEmbedded;
+  
+  const UserManagementPage({
+    super.key, 
+    this.isEmbedded = false,
+  });
 
   @override
   State<UserManagementPage> createState() => _UserManagementPageState();
@@ -68,48 +76,130 @@ class _UserManagementPageState extends State<UserManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manajemen User/Staff'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-      ),
-      body: Column(
+    final content = Column(
+      children: [
+        // Tabs
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            border: Border(
+              bottom: BorderSide(color: Colors.grey[300]!),
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildTabButton('users', 'Users', Icons.people),
+              ),
+              Expanded(
+                child: _buildTabButton('activity', 'Activity Log', Icons.history),
+              ),
+            ],
+          ),
+        ),
+        // Content
+        Expanded(
+          child: selectedTab == 'users' ? _buildUsersTab() : _buildActivityLogTab(),
+        ),
+      ],
+    );
+
+    if (widget.isEmbedded) {
+      return Stack(
         children: [
-          // Tabs
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              border: Border(
-                bottom: BorderSide(color: Colors.grey[300]!),
+          content,
+          if (selectedTab == 'users')
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: _showAddUserDialog,
+                mini: true, 
+                child: const Icon(Icons.add),
               ),
             ),
-            child: Row(
+        ],
+      );
+    }
+
+    // Use LayoutBuilder for responsive design
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Desktop layout with sidebar
+        if (constraints.maxWidth >= 768) {
+          return SidebarLayout(
+            title: 'Manajemen User',
+            items: [
+              SidebarItem(
+                label: 'Dashboard',
+                icon: Icons.dashboard_rounded,
+                onTap: () => Navigator.of(context)
+                    .pushReplacementNamed(AppRoutes.ownerDashboard),
+              ),
+              SidebarItem(
+                label: 'Manajemen User',
+                icon: Icons.people,
+                isActive: true,
+                onTap: () {},
+              ),
+              SidebarItem(
+                label: 'Riwayat Pesanan',
+                icon: Icons.history,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const KasirRiwayat(userRole: 'owner'),
+                    ),
+                  );
+                },
+              ),
+              SidebarItem(
+                label: 'Keluar',
+                icon: Icons.logout,
+                isDestructive: true,
+                onTap: () => AppRoutes.logout(context),
+              ),
+            ],
+            body: Stack(
               children: [
-                Expanded(
-                  child: _buildTabButton('users', 'Users', Icons.people),
-                ),
-                Expanded(
-                  child: _buildTabButton('activity', 'Activity Log', Icons.history),
-                ),
+                content,
+                if (selectedTab == 'users')
+                  Positioned(
+                    bottom: 24,
+                    right: 24,
+                    child: FloatingActionButton.extended(
+                      onPressed: _showAddUserDialog,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Tambah User'),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
               ],
             ),
+          );
+        }
+        
+        // Mobile layout (original)
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Manajemen User/Staff'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
           ),
-          // Content
-          Expanded(
-            child: selectedTab == 'users' ? _buildUsersTab() : _buildActivityLogTab(),
-          ),
-        ],
-      ),
-      floatingActionButton: selectedTab == 'users'
-          ? FloatingActionButton.extended(
-              onPressed: _showAddUserDialog,
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah User'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
-            )
-          : null,
+          body: content,
+          floatingActionButton: selectedTab == 'users'
+              ? FloatingActionButton.extended(
+                  onPressed: _showAddUserDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Tambah User'),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                )
+              : null,
+        );
+      },
     );
   }
 
@@ -198,7 +288,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
       elevation: 2,
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: roleColor.withOpacity(0.2),
+          backgroundColor: roleColor.withValues(alpha: 0.2),
           child: Icon(roleIcon, color: roleColor),
         ),
         title: Text(
@@ -214,7 +304,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: roleColor.withOpacity(0.1),
+                color: roleColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -328,7 +418,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: _getActionColor(log.action).withOpacity(0.2),
+              backgroundColor: _getActionColor(log.action).withValues(alpha: 0.2),
               child: Icon(
                 _getActionIcon(log.action),
                 color: _getActionColor(log.action),
@@ -761,7 +851,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
                           Text(
                             user.username,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 12,
                             ),
                           ),

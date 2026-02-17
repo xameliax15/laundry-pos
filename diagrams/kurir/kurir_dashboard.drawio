@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Dashboard - Kurir" id="kurir-dashboard">
+    <mxGraphModel dx="994" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="dashboard kurir" vertex="1">
+          <mxGeometry height="830" width="750" x="620" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-2" parent="sII5BkM9ZQEae9ZrF1wD-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kurir" vertex="1">
+          <mxGeometry height="810" width="230" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="sII5BkM9ZQEae9ZrF1wD-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="94.99999999999955" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="loginSuccess" parent="sII5BkM9ZQEae9ZrF1wD-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Login berhasil&#xa;sebagai Kurir" vertex="1">
+          <mxGeometry height="60" width="160" x="34.999999999999545" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loginSuccess" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="displayStats" parent="sII5BkM9ZQEae9ZrF1wD-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil Stats Card:&#xa;- Active Deliveries&#xa;- Completed Today&#xa;(on mobile/desktop)" vertex="1">
+          <mxGeometry height="70" width="170" x="20" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="displayList" parent="sII5BkM9ZQEae9ZrF1wD-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampil Daftar Order:&#xa;- Customer name&#xa;- Alamat pengiriman&#xa;- Status badge&#xa;- COD indicator&#xa;- Action buttons" vertex="1">
+          <mxGeometry height="90" width="190" x="10" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-2" source="displayStats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="displayList" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="displayMenu" parent="sII5BkM9ZQEae9ZrF1wD-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil Menu Navigasi:&#xa;Mobile: Bottom Nav&#xa;Desktop: Sidebar" vertex="1">
+          <mxGeometry height="60" width="170" x="20" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-2" source="displayList" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="displayMenu" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="sII5BkM9ZQEae9ZrF1wD-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="85" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-2" source="displayMenu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-3" parent="sII5BkM9ZQEae9ZrF1wD-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="810" width="520" x="230" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="getUser" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="AuthService.getCurrentUser()&#xa;(dapatkan user ID)" vertex="1">
+          <mxGeometry height="60" width="160" x="99.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="getOrders" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="OrderKurirService&#xa;.getOrderKurirByKurirId()&#xa;(load order yang di-assign)" vertex="1">
+          <mxGeometry height="50" width="170" x="95" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="getUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="getOrders" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="loopStart" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="For Each&#xa;Order" vertex="1">
+          <mxGeometry height="55" width="60" x="200" y="202.5" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="getOrders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loopStart" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="loadCustomer" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Load Customer&#xa;(by customer_id)" vertex="1">
+          <mxGeometry height="40" width="120" x="210" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loopStart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadCustomer" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-10" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loadPembayaran" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="calcStats">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="loadPembayaran" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Load Pembayaran&#xa;(check COD status)" vertex="1">
+          <mxGeometry height="40" width="115" x="70" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loopStart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadPembayaran" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-11" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loadTransaksi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="calcStats">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="35" y="410" />
+              <mxPoint x="175" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loadTransaksi" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Load Transaksi&#xa;(by transaksi_id)" vertex="1">
+          <mxGeometry height="40" width="100" x="10" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loopStart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="loadTransaksi" value="Yes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="calcStats" parent="sII5BkM9ZQEae9ZrF1wD-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Hitung Statistik:&#xa;- Jumlah order hari ini&#xa;- Order belum selesai&#xa;- Pending COD" vertex="1">
+          <mxGeometry height="70" width="170" x="90" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loopStart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="calcStats" value="Done">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="230" />
+              <mxPoint x="400" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sII5BkM9ZQEae9ZrF1wD-7" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-3" source="loadCustomer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="calcStats">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-1" source="loginSuccess" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="getUser" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="sII5BkM9ZQEae9ZrF1wD-1" source="calcStats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="displayStats" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

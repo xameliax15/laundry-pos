@@ -1,3 +1,11 @@
+﻿import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../providers/app_providers.dart';
+import 'components/dashboard_header.dart';
+import 'widgets/kasir_stats_card.dart';
+import 'widgets/kasir_action_buttons.dart';
+import 'views/laundry_list_view.dart';
+import '../../widgets/section_header.dart'; // Assuming this exists or I should create it/use generic Text
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,11 +21,15 @@ import '../../services/transaksi_service.dart';
 import '../../services/customer_service.dart';
 import '../../core/routes.dart';
 import '../../core/price_list.dart';
+import '../../services/print_service.dart';
 import '../../core/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../../theme/app_colors.dart';
 import '../../widgets/sidebar_layout.dart';
+import '../../widgets/qris_payment_dialog.dart';
+import '../../widgets/bottom_nav_bar.dart';
+import 'kasir_mobile_view.dart';
 
 class KasirDashboard extends StatefulWidget {
   const KasirDashboard({super.key});
@@ -27,35 +39,21 @@ class KasirDashboard extends StatefulWidget {
 }
 
 class _KasirDashboardState extends State<KasirDashboard> {
-  // Data dari database
-  int totalTransaksiHariIni = 0;
-  double totalPendapatanHariIni = 0.0;
-  bool isLoading = true;
-  
-  // Map untuk menyimpan detail laundry per transaksi
-  Map<String, List<DetailLaundry>> detailLaundryMap = {};
-  
-  // Service
+  // Services
   final TransaksiService _transaksiService = TransaksiService();
   final CustomerService _customerService = CustomerService();
   final SupabaseClient _supabase = Supabase.instance.client;
-  
-  List<Transaksi> daftarLaundryMasuk = [];
-  List<Transaksi> riwayatTransaksiHariIni = [];
-  
-  // Search and filter
+
+  // Search Controller
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-  String? _filterStatus;
-  DateTime? _filterStartDate;
-  DateTime? _filterEndDate;
-  bool _isFiltered = false;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
-    _searchController.addListener(_onSearchChanged);
+    // Initial load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TransaksiProvider>().loadDashboardData();
+    });
   }
 
   @override
@@ -64,105 +62,103 @@ class _KasirDashboardState extends State<KasirDashboard> {
     super.dispose();
   }
 
-  void _onSearchChanged() {
-    setState(() {
-      _searchQuery = _searchController.text;
-    });
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      // Load statistics
-      final totalTransaksi = await _transaksiService.getTotalTransaksiHariIni();
-      final totalPendapatan = await _transaksiService.getTotalPendapatanHariIni();
-
-      // Load transaksi dengan search dan filter
-      List<Transaksi> laundryMasuk = [];
-      List<Transaksi> transaksiHariIni = [];
-
-      if (_searchQuery.isNotEmpty) {
-        // Jika ada search query, gunakan search
-        final searchResults = await _transaksiService.searchTransaksi(_searchQuery);
-        if (_isFiltered) {
-          // Apply filter ke search results
-          laundryMasuk = searchResults.where((t) {
-            if (_filterStatus != null && t.status != _filterStatus) return false;
-            if (_filterStartDate != null && t.tanggalMasuk.isBefore(_filterStartDate!)) return false;
-            if (_filterEndDate != null) {
-              final endDate = DateTime(_filterEndDate!.year, _filterEndDate!.month, _filterEndDate!.day, 23, 59, 59);
-              if (t.tanggalMasuk.isAfter(endDate)) return false;
-            }
-            return true;
-          }).toList();
-        } else {
-          laundryMasuk = searchResults;
-        }
-        transaksiHariIni = searchResults;
-      } else if (_isFiltered) {
-        // Jika hanya filter tanpa search
-        final filtered = await _transaksiService.filterTransaksi(
-          status: _filterStatus,
-          startDate: _filterStartDate,
-          endDate: _filterEndDate,
-        );
-        laundryMasuk = filtered.where((t) => t.status == 'pending' || t.status == 'proses').toList();
-        transaksiHariIni = filtered;
-      } else {
-        // Load normal (tanpa search/filter)
-        final pending = await _transaksiService.getTransaksiByStatus('pending');
-        final proses = await _transaksiService.getTransaksiByStatus('proses');
-        laundryMasuk = [...pending, ...proses];
-        transaksiHariIni = await _transaksiService.getTransaksiHariIni();
-      }
-
-      // Load detail laundry untuk semua transaksi
-      final detailMap = <String, List<DetailLaundry>>{};
-      for (var transaksi in laundryMasuk) {
-        final details = await _transaksiService.getDetailLaundryByTransaksiId(transaksi.id);
-        detailMap[transaksi.id] = details;
-      }
-      for (var transaksi in transaksiHariIni) {
-        if (!detailMap.containsKey(transaksi.id)) {
-          final details = await _transaksiService.getDetailLaundryByTransaksiId(transaksi.id);
-          detailMap[transaksi.id] = details;
-        }
-      }
-
-      setState(() {
-        totalTransaksiHariIni = totalTransaksi;
-        totalPendapatanHariIni = totalPendapatan;
-        daftarLaundryMasuk = laundryMasuk;
-        riwayatTransaksiHariIni = transaksiHariIni;
-        detailLaundryMap = detailMap;
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading data: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    return Consumer<TransaksiProvider>(
+      builder: (context, provider, child) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
+            
+            if (isMobile) {
+              return _buildMobileLayout(provider);
+            } else {
+              return _buildDesktopLayout(provider);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildMobileLayout(TransaksiProvider provider) {
+    final user = context.read<AuthProvider>().currentUser;
+    final userName = user?.username ?? 'Kasir';
+    
+    // Get pending payments (transaksi with pending payment status)
+    // Filter out transactions that are already paid
+    final pendingPayments = provider.transaksi
+        .where((t) => (t.status == 'pending' || t.status == 'proses') && !provider.isPaid(t.id))
+        .toList();
+    
+    // Get ready for pickup (selesai status)
+    final readyForPickup = provider.transaksi
+        .where((t) => t.status == 'selesai')
+        .toList();
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: provider.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : KasirMobileView(
+                userName: userName,
+                pendingCount: provider.transaksi.where((t) => t.status == 'pending').length,
+                prosesCount: provider.transaksi.where((t) => t.status == 'proses').length,
+                selesaiCount: provider.transaksi.where((t) => t.status == 'selesai').length,
+                todayRevenue: provider.totalPendapatanHariIni,
+                todayTransactions: provider.totalTransaksiHariIni,
+                pendingPayments: pendingPayments,
+                readyForPickup: readyForPickup,
+                onNewOrder: _buatTransaksiBaru,
+                onPayment: _inputPembayaran,
+                onFindCustomer: _showSearchCustomerDialog,
+                onViewAllPending: () => Navigator.of(context).pushNamed(AppRoutes.kasirRiwayat, arguments: 'pending'),
+                onViewAllReady: () => Navigator.of(context).pushNamed(AppRoutes.kasirRiwayat, arguments: 'selesai'),
+                onProcessPayment: (trx) => _pembayaranDiTempat(trx),
+                onTapOrder: (trx) => _showDetailLaundry(trx),
+                onPrintStruk: _cetakStruk, // New
+                onRefresh: () => provider.refresh(),
+
+                onLogout: () => AppRoutes.logout(context),
+                onSearchChanged: (val) {
+                  provider.setSearch(val);
+                },
+                onFilterTap: _showFilterDialog,
+                isSearching: provider.searchQuery.isNotEmpty,
+                searchResults: provider.transaksi,
+              ),
+      ),
+      bottomNavigationBar: MobileBottomNavBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.of(context).pushNamed(AppRoutes.kasirOrders); // Orders Page
+          } else if (index == 2) {
+            Navigator.of(context).pushNamed(AppRoutes.kasirPelanggan);
+          } else if (index == 3) {
+            Navigator.of(context).pushNamed(AppRoutes.kasirRiwayat); // History Page
+          }
+        },
+        onFabTap: _buatTransaksiBaru,
+        items: const [
+          MobileNavItem(icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home'),
+          MobileNavItem(icon: Icons.shopping_bag_outlined, activeIcon: Icons.shopping_bag, label: 'Orders'),
+          MobileNavItem(icon: Icons.people_outline, activeIcon: Icons.people, label: 'Customers'),
+          MobileNavItem(icon: Icons.history_outlined, activeIcon: Icons.history, label: 'History'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopLayout(TransaksiProvider provider) {
     return SidebarLayout(
       title: 'Dashboard Kasir',
       headerActions: [
         IconButton(
           icon: const Icon(Icons.filter_list),
-          onPressed: _showFilterDialog,
+          onPressed: _showFilterPembayaranDialog,
           tooltip: 'Filter',
-        ),
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: _showSearchDialog,
-          tooltip: 'Pencarian',
         ),
       ],
       items: [
@@ -198,37 +194,54 @@ class _KasirDashboardState extends State<KasirDashboard> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
-      body: isLoading
+      body: provider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: _loadData,
+              onRefresh: () async => provider.refresh(),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(),
+                    const DashboardHeader(),
                     const SizedBox(height: 16),
                     // Search Bar
-                    _buildSearchBar(),
+                    _buildSearchBar(provider),
                     const SizedBox(height: 16),
 
                     // Filter Info
-                    if (_isFiltered) _buildFilterInfo(),
+                    if (provider.filterStatus != null || provider.filterStartDate != null || provider.filterEndDate != null)
+                       _buildFilterInfo(provider),
 
                     // Statistik Card
-                    _buildStatistikCard(),
+                    KasirStatsCard(
+                      totalTransaksi: provider.totalTransaksiHariIni,
+                      totalPendapatan: provider.totalPendapatanHariIni,
+                    ),
                     const SizedBox(height: 20),
 
                     // Tombol Utama
-                    _buildTombolUtama(),
+                    KasirActionButtons(
+                      onTerimaLaundry: _terimaLaundry,
+                      onInputPembayaran: _inputPembayaran,
+                      onDetailIsiLaundry: _detailIsiLaundry,
+                      onFilterPembayaran: _showFilterPembayaranDialog,
+                      onCariCustomer: _showSearchCustomerDialog,
+                    ),
                     const SizedBox(height: 20),
 
                     // Daftar Laundry Masuk
-                    _buildSectionTitle('📦 Daftar Laundry Masuk'),
+                    const SectionHeader(title: '📦 Daftar Laundry Masuk'),
                     const SizedBox(height: 12),
-                    _buildDaftarLaundryMasuk(),
+                    LaundryListView(
+                      transaksiList: provider.transaksi,
+                      isLoading: provider.isLoading,
+                      onUpdateStatus: _showUpdateStatusDialog,
+                      onShowDetail: _showDetailLaundry,
+                      onInputPembayaran: _pembayaranDiTempat,
+                      onCetakStruk: _cetakStruk,
+                    ),
                   ],
                 ),
               ),
@@ -236,136 +249,34 @@ class _KasirDashboardState extends State<KasirDashboard> {
     );
   }
 
-  Widget _buildStatistikCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.brandBlue,
-            AppColors.skyBlue,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+  Widget _buildSearchBar(TransaksiProvider provider) {
+    return TextField(
+      controller: _searchController,
+      decoration: InputDecoration(
+        hintText: 'Cari transaksi...',
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: _searchController.text.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  provider.setSearch('');
+                },
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x331E88D6),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildStatItem(
-              'Total Transaksi',
-              totalTransaksiHariIni.toString(),
-              Icons.receipt_long,
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 50,
-            color: const Color(0x4DFFFFFF),
-          ),
-          Expanded(
-            child: _buildStatItem(
-              'Total Pendapatan',
-              'Rp ${_formatCurrency(totalPendapatanHariIni)}',
-              Icons.account_balance_wallet,
-            ),
-          ),
-        ],
-      ),
+      onChanged: (value) => provider.setSearch(value),
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.white, size: 32),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: const Color(0xE6FFFFFF),
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
 
-  Widget _buildTombolUtama() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildTombol(
-                'Terima Laundry',
-                Icons.add_shopping_cart,
-                AppColors.accentGreen,
-                _terimaLaundry,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildTombol(
-                'Input Pembayaran',
-                Icons.payment,
-                AppColors.brandBlue,
-                _inputPembayaran,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildTombol(
-                'Detail Isi Laundry',
-                Icons.list_alt,
-                AppColors.accentOrange,
-                _detailIsiLaundry,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildTombol(
-                'Filter Pembayaran',
-                Icons.filter_alt,
-                AppColors.accentPurple,
-                _showFilterPembayaranDialog,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildTombol(
-                'Cari Customer',
-                Icons.person_search,
-                AppColors.deepBlue,
-                _showSearchCustomerDialog,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   void _showSearchCustomerDialog() async {
     final searchController = TextEditingController();
@@ -465,960 +376,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
     );
   }
 
-  Widget _buildTombol(String label, IconData icon, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(20, color.red, color.green, color.blue),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Color.fromARGB(60, color.red, color.green, color.blue),
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildSectionTitle(String title) {
-    return Row(
-      children: [
-        Container(
-          width: 6,
-          height: 20,
-          decoration: BoxDecoration(
-            color: AppColors.accentOrange,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.text,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeader() {
-    final now = DateTime.now();
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.skyBlue, AppColors.brandBlue],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x332B7BB9),
-            blurRadius: 12,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Ringkasan Kasir',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatTanggal(now),
-                  style: const TextStyle(
-                    color: Color(0xEEFFFFFF),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0x33FFFFFF),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: const Icon(
-              Icons.receipt_long,
-              color: Colors.white,
-              size: 26,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatTanggal(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
-  }
-
-  Widget _buildDaftarLaundryMasuk() {
-    if (daftarLaundryMasuk.isEmpty) {
-      return _buildEmptyState('Tidak ada laundry masuk');
-    }
-
-    return Column(
-      children: daftarLaundryMasuk.map((transaksi) {
-        return _buildTransaksiCard(transaksi, showActions: true);
-      }).toList(),
-    );
-  }
-
-  Widget _buildRiwayatTransaksi() {
-    if (riwayatTransaksiHariIni.isEmpty) {
-      return _buildEmptyState('Belum ada riwayat transaksi hari ini');
-    }
-
-    return Column(
-      children: riwayatTransaksiHariIni.map((transaksi) {
-        return _buildRiwayatTransaksiCard(transaksi);
-      }).toList(),
-    );
-  }
-
-  Widget _buildRiwayatTransaksiCard(Transaksi transaksi) {
-    final detailLaundry = detailLaundryMap[transaksi.id] ?? [];
-    Color statusColor = _getStatusColor(transaksi.status);
-    
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header: Nama Customer & Status
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        transaksi.customerName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.phone, size: 14, color: Colors.grey[600]),
-                          const SizedBox(width: 4),
-                          Text(
-                            transaksi.customerPhone,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    _formatStatus(transaksi.status),
-                    style: TextStyle(
-                      color: statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            
-            // Tanggal Masuk
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
-                const SizedBox(width: 6),
-                Text(
-                  'Tanggal Masuk: ${_formatDateTime(transaksi.tanggalMasuk)}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
-            ),
-            if (transaksi.tanggalSelesai != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Icon(Icons.check_circle, size: 14, color: Colors.green[600]),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Selesai: ${_formatDateTime(transaksi.tanggalSelesai!)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.green[700],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            const Divider(height: 24),
-            
-            // Detail Laundry
-            if (detailLaundry.isNotEmpty) ...[
-              Text(
-                'Detail Laundry:',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
-                ),
-              ),
-              const SizedBox(height: 8),
-              ...detailLaundry.map((detail) => _buildRiwayatDetailLaundryItem(detail)),
-              const SizedBox(height: 12),
-            ],
-            
-            // Foto Transaksi (jika ada)
-            if (detailLaundry.any((d) => d.foto != null && d.foto!.isNotEmpty)) ...[
-              Text(
-                'Foto Transaksi:',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildFotoTransaksi(detailLaundry),
-              const SizedBox(height: 12),
-            ],
-            
-            const Divider(height: 24),
-            
-            // Informasi Pembayaran
-            FutureBuilder<List<Pembayaran>>(
-              future: _transaksiService.getPembayaranByTransaksiId(transaksi.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 40,
-                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                  );
-                }
-                
-                final pembayaranList = snapshot.data ?? [];
-                final totalPembayaran = pembayaranList
-                    .where((p) => p.status == 'lunas')
-                    .fold<double>(0.0, (sum, p) => sum + p.jumlah);
-                final isLunas = totalPembayaran >= transaksi.totalHarga;
-                
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Informasi Pembayaran:',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[800],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    if (pembayaranList.isNotEmpty) ...[
-                      ...pembayaranList.map((pembayaran) => Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _getPaymentIcon(pembayaran.metodePembayaran),
-                              size: 16,
-                              color: _getPaymentColor(pembayaran.metodePembayaran),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                '${_formatPaymentMethod(pembayaran.metodePembayaran)} - Rp ${_formatCurrency(pembayaran.jumlah)}',
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: pembayaran.status == 'lunas'
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.orange.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                pembayaran.status == 'lunas' ? 'Lunas' : 'Pending',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: pembayaran.status == 'lunas'
-                                      ? Colors.green[700]
-                                      : Colors.orange[700],
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                      const SizedBox(height: 8),
-                    ] else ...[
-                      Text(
-                        'Belum ada pembayaran',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              isLunas ? Icons.check_circle : Icons.pending,
-                              size: 18,
-                              color: isLunas ? Colors.green : Colors.orange,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              isLunas ? 'Lunas' : 'Belum Lunas',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: isLunas ? Colors.green[700] : Colors.orange[700],
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (!isLunas && totalPembayaran > 0)
-                          Text(
-                            'Sisa: Rp ${_formatCurrency(transaksi.totalHarga - totalPembayaran)}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.orange[700],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-            
-            const Divider(height: 24),
-            
-            // Total Harga
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.brandBlue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Harga:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  Text(
-                    'Rp ${_formatCurrency(transaksi.totalHarga)}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.brandBlue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Catatan jika ada
-            if (transaksi.catatan != null && transaksi.catatan!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.note, size: 16, color: Colors.amber[800]),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        transaksi.catatan!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.amber[900],
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRiwayatDetailLaundryItem(DetailLaundry detail) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: AppColors.brandBlue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Icon(
-              _getServiceIcon(detail.jenisLayanan),
-              size: 20,
-              color: AppColors.brandBlue,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _formatServiceType(detail.jenisLayanan),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Jenis: ${detail.jenisBarang}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                if (detail.jumlah > 0) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    'Jumlah: ${detail.jumlah}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-                if (detail.berat != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    'Berat: ${detail.berat} kg',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-                if (detail.ukuran != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    'Ukuran: ${detail.ukuran}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-                if (detail.catatan != null && detail.catatan!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    'Catatan: ${detail.catatan}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.orange[700],
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFotoTransaksi(List<DetailLaundry> detailLaundry) {
-    final fotoList = detailLaundry
-        .where((d) => d.foto != null && d.foto!.isNotEmpty)
-        .map((d) => d.foto!)
-        .toList();
-    
-    if (fotoList.isEmpty) return const SizedBox.shrink();
-    
-    return SizedBox(
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: fotoList.length,
-        itemBuilder: (context, index) {
-          final fotoPath = fotoList[index];
-          return Container(
-            margin: const EdgeInsets.only(right: 8),
-            width: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: _buildImageWidget(fotoPath),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildImageWidget(String imagePath) {
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      // URL dari Supabase
-      return Image.network(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[200],
-            child: const Icon(Icons.broken_image, color: Colors.grey),
-          );
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: Colors.grey[200],
-            child: Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      // Local file path
-      return Image.file(
-        File(imagePath),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[200],
-            child: const Icon(Icons.broken_image, color: Colors.grey),
-          );
-        },
-      );
-    }
-  }
-
-  IconData _getServiceIcon(String jenisLayanan) {
-    switch (jenisLayanan) {
-      case 'laundry_kiloan':
-        return Icons.local_laundry_service;
-      case 'sepatu':
-        return Icons.sports_soccer;
-      case 'jaket':
-        return Icons.checkroom;
-      case 'helm':
-        return Icons.sports_motorsports;
-      case 'karpet':
-        return Icons.carpenter;
-      case 'tas':
-        return Icons.shopping_bag;
-      case 'boneka':
-        return Icons.toys;
-      default:
-        return Icons.cleaning_services;
-    }
-  }
-
-  String _formatServiceType(String jenisLayanan) {
-    switch (jenisLayanan) {
-      case 'laundry_kiloan':
-        return 'Laundry Kiloan';
-      case 'sepatu':
-        return 'Cuci Sepatu';
-      case 'jaket':
-        return 'Cuci Jaket';
-      case 'helm':
-        return 'Cuci Helm';
-      case 'karpet':
-        return 'Cuci Karpet';
-      case 'tas':
-        return 'Cuci Tas';
-      case 'boneka':
-        return 'Cuci Boneka';
-      default:
-        return jenisLayanan;
-    }
-  }
-
-  IconData _getPaymentIcon(String metode) {
-    switch (metode.toLowerCase()) {
-      case 'cash':
-        return Icons.money;
-      case 'transfer':
-        return Icons.account_balance;
-      case 'qris':
-        return Icons.qr_code;
-      case 'cod':
-        return Icons.local_shipping;
-      default:
-        return Icons.payment;
-    }
-  }
-
-  Color _getPaymentColor(String metode) {
-    switch (metode.toLowerCase()) {
-      case 'cash':
-        return Colors.green;
-      case 'transfer':
-        return Colors.blue;
-      case 'qris':
-        return Colors.purple;
-      case 'cod':
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  String _formatPaymentMethod(String metode) {
-    switch (metode.toLowerCase()) {
-      case 'cash':
-        return 'Tunai';
-      case 'transfer':
-        return 'Transfer';
-      case 'qris':
-        return 'QRIS';
-      case 'cod':
-        return 'COD (Cash on Delivery)';
-      default:
-        return metode;
-    }
-  }
-
-  Widget _buildTransaksiCard(Transaksi transaksi, {required bool showActions}) {
-    Color statusColor = _getStatusColor(transaksi.status);
-    
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        transaksi.customerName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        transaksi.customerPhone,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    _formatStatus(transaksi.status),
-                    style: TextStyle(
-                      color: statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
-                const SizedBox(width: 4),
-                Text(
-                  _formatDateTime(transaksi.tanggalMasuk),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-            if (transaksi.catatan != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                'Catatan: ${transaksi.catatan}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[700],
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-            const Divider(height: 24),
-            // Status Pembayaran
-            FutureBuilder<double>(
-              future: _transaksiService.getTotalPembayaranByTransaksiId(transaksi.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox.shrink();
-                }
-                final totalPembayaran = snapshot.data ?? 0.0;
-                final sisaBayar = transaksi.totalHarga - totalPembayaran;
-                final isLunas = totalPembayaran >= transaksi.totalHarga;
-                
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          isLunas ? Icons.check_circle : Icons.pending,
-                          size: 16,
-                          color: isLunas ? Colors.green : Colors.orange,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          isLunas ? 'Lunas' : 'Belum Lunas',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isLunas ? Colors.green : Colors.orange,
-                          ),
-                        ),
-                        const Spacer(),
-                        if (!isLunas)
-                          Text(
-                            'Sisa: Rp ${_formatCurrency(sisaBayar)}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.orange[700],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                      ],
-                    ),
-                    if (!isLunas && totalPembayaran > 0) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        'Sudah dibayar: Rp ${_formatCurrency(totalPembayaran)}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-                  ],
-                );
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total: Rp ${_formatCurrency(transaksi.totalHarga)}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ),
-                if (showActions)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Tombol Update Status
-                      if (transaksi.status == 'pending' || 
-                          transaksi.status == 'proses' || 
-                          (transaksi.status == 'selesai' && !transaksi.isDelivery))
-                        IconButton(
-                          icon: const Icon(Icons.update, color: Colors.blue),
-                          onPressed: () => _showUpdateStatusDialog(transaksi),
-                          tooltip: 'Update Status',
-                        ),
-                      IconButton(
-                        icon: const Icon(Icons.list_alt, color: Colors.purple),
-                        onPressed: () => _showDetailLaundry(transaksi),
-                        tooltip: 'Detail Isi Laundry',
-                      ),
-                      FutureBuilder<bool>(
-                        future: _transaksiService.isTransaksiLunas(transaksi.id),
-                        builder: (context, snapshot) {
-                          final isLunas = snapshot.data ?? false;
-                          // Tampilkan tombol pembayaran jika belum lunas dan status selesai/diterima
-                          if (!isLunas &&
-                              (transaksi.status == 'pending' ||
-                               transaksi.status == 'selesai' ||
-                               transaksi.status == 'diterima')) {
-                            return IconButton(
-                              icon: const Icon(Icons.payment, color: Colors.blue),
-                              onPressed: () => _pembayaranDiTempat(transaksi),
-                              tooltip: 'Pembayaran',
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.receipt, color: Colors.orange),
-                        onPressed: () => _cetakStruk(transaksi),
-                        tooltip: 'Cetak/Lihat Struk',
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(String message) {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          children: [
-            Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // Action Methods
   void _buatTransaksiBaru() {
@@ -1450,7 +408,10 @@ class _KasirDashboardState extends State<KasirDashboard> {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
+            constraints: BoxConstraints(
+              maxWidth: 600,
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1802,7 +763,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                               final index = entry.key;
                               final item = entry.value;
                               return DetailLaundry(
-                                id: '${transaksiId}_${index}',
+                                id: '${transaksiId}_$index',
                                 idTransaksi: transaksiId,
                                 jenisLayanan: item['jenisLayanan'] ?? 'laundry_kiloan',
                                 jenisBarang: item['jenisBarang'] ?? 'reguler',
@@ -1829,7 +790,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                             Navigator.pop(context);
                             
                             // Reload data dari database
-                            await _loadData();
+                            await context.read<TransaksiProvider>().loadDashboardData();
                             
                             // Show success dialog dengan detail
                             _showSuccessDialog(newTransaksi, detailLaundryListToSave);
@@ -2007,6 +968,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
           if (jenisLayanan == 'laundry_kiloan') ...[
             // Opsi Laundry Kiloan
             DropdownButtonFormField<String>(
+              isExpanded: true,
               value: item['jenisBarang'] ?? 'reguler',
               decoration: InputDecoration(
                 labelText: 'Pilihan Laundry',
@@ -2020,7 +982,11 @@ class _KasirDashboardState extends State<KasirDashboard> {
               items: PriceList.getOpsiLaundryKiloan().map((opsi) {
                 return DropdownMenuItem<String>(
                   value: opsi['value'] as String,
-                  child: Text('${opsi['label']} - Rp ${(opsi['harga'] as double).toStringAsFixed(0)}/kg'),
+                  child: Text(
+                    '${opsi['label']} - Rp ${(opsi['harga'] as double).toStringAsFixed(0)}/kg',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -2035,27 +1001,25 @@ class _KasirDashboardState extends State<KasirDashboard> {
             TextField(
               controller: beratController,
               decoration: InputDecoration(
-                labelText: 'Berat (kg) - Min ${PriceList.minKiloan}kg',
+                labelText: 'Berat (kg)',
                 prefixIcon: const Icon(Icons.scale),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 filled: true,
                 fillColor: Colors.white,
-                helperText: 'Gunakan titik (.) untuk desimal, contoh: 2.5 atau 3.75',
+                helperText: 'Bisa menggunakan koma (,) atau titik (.)',
               ),
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               onChanged: (value) {
-                setDialogState(() {
                   if (value.isNotEmpty) {
-                    final berat = double.tryParse(value);
+                    final normalizedValue = value.replaceAll(',', '.');
+                    final berat = double.tryParse(normalizedValue);
                     if (berat != null) {
-                      final validBerat = berat < PriceList.minKiloan ? PriceList.minKiloan : berat;
-                      item['berat'] = validBerat;
+                      item['berat'] = berat;
                       updateHarga();
                     }
                   }
-                });
               },
             ),
           ] else if (jenisLayanan == 'sepatu') ...[
@@ -2241,15 +1205,15 @@ class _KasirDashboardState extends State<KasirDashboard> {
               items: [
                 DropdownMenuItem(
                   value: 'standar',
-                  child: Text('Standar - Rp ${PriceList.karpetStandar.toStringAsFixed(0)}/m²'),
+                  child: Text('Standar - Rp ${PriceList.karpetStandar.toStringAsFixed(0)}/mÂ²'),
                 ),
                 DropdownMenuItem(
                   value: 'tipis',
-                  child: Text('Tipis - Rp ${PriceList.karpetTipis.toStringAsFixed(0)}/m²'),
+                  child: Text('Tipis - Rp ${PriceList.karpetTipis.toStringAsFixed(0)}/mÂ²'),
                 ),
                 DropdownMenuItem(
                   value: 'tebal',
-                  child: Text('Tebal/Mushola - Rp ${PriceList.karpetTebal.toStringAsFixed(0)}/m²'),
+                  child: Text('Tebal/Mushola - Rp ${PriceList.karpetTebal.toStringAsFixed(0)}/mÂ²'),
                 ),
               ],
               onChanged: (value) {
@@ -2260,11 +1224,11 @@ class _KasirDashboardState extends State<KasirDashboard> {
               },
             ),
             const SizedBox(height: 8),
-            // Luas (m²)
+            // Luas (mÂ²)
             TextField(
               controller: luasController,
               decoration: InputDecoration(
-                labelText: 'Luas (m²)',
+                labelText: 'Luas (mÂ²)',
                 prefixIcon: const Icon(Icons.square_foot),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -2584,186 +1548,89 @@ class _KasirDashboardState extends State<KasirDashboard> {
     );
   }
 
-  void _showFilterPembayaranDialog() async {
-    String? selectedStatus;
-    String? selectedMetode;
-    DateTime? startDate;
-    DateTime? endDate;
 
-    await showDialog(
+
+  void _showFilterDialog() {
+    final provider = context.read<TransaksiProvider>();
+    String? selectedStatus = provider.filterStatus;
+    DateTime? startDate = provider.filterStartDate;
+    DateTime? endDate = provider.filterEndDate;
+
+    showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Filter Pembayaran'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Filter Status
-                const Text(
-                  'Status Pembayaran:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedStatus,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: null, child: Text('Semua Status')),
-                    DropdownMenuItem(value: 'lunas', child: Text('Lunas')),
-                    DropdownMenuItem(value: 'belum_lunas', child: Text('Belum Lunas')),
-                    DropdownMenuItem(value: 'pending', child: Text('Pending')),
-                  ],
-                  onChanged: (value) {
+          title: const Text('Filter Transaksi'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Status Transaksi:', style: TextStyle(fontWeight: FontWeight.bold)),
+              DropdownButton<String>(
+                value: selectedStatus,
+                isExpanded: true,
+                hint: const Text('Semua Status'),
+                items: const [
+                  DropdownMenuItem(value: null, child: Text('Semua')),
+                  DropdownMenuItem(value: 'pending', child: Text('Pending')),
+                  DropdownMenuItem(value: 'proses', child: Text('Sedang Proses')),
+                  DropdownMenuItem(value: 'selesai', child: Text('Selesai / Siap Ambil')),
+                  DropdownMenuItem(value: 'diterima', child: Text('Diterima & Lunas')),
+                ],
+                onChanged: (val) {
+                  setDialogState(() => selectedStatus = val);
+                },
+              ),
+              const SizedBox(height: 16),
+              const Text('Rentang Tanggal:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final picked = await showDateRangePicker(
+                    context: context,
+                    firstDate: DateTime(2023),
+                    lastDate: DateTime.now(),
+                    initialDateRange: startDate != null && endDate != null
+                        ? DateTimeRange(start: startDate!, end: endDate!)
+                        : null,
+                  );
+                  if (picked != null) {
                     setDialogState(() {
-                      selectedStatus = value;
+                      startDate = picked.start;
+                      endDate = picked.end;
                     });
-                  },
+                  }
+                },
+                icon: const Icon(Icons.date_range),
+                label: Text(
+                  startDate != null && endDate != null
+                      ? '${DateFormat('dd/MM').format(startDate!)} - ${DateFormat('dd/MM').format(endDate!)}'
+                      : 'Pilih Tanggal',
                 ),
-                const SizedBox(height: 16),
-                // Filter Metode Pembayaran
-                const Text(
-                  'Metode Pembayaran:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedMetode,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: null, child: Text('Semua Metode')),
-                    DropdownMenuItem(value: 'cash', child: Text('Cash')),
-                    DropdownMenuItem(value: 'transfer', child: Text('Transfer Bank')),
-                    DropdownMenuItem(value: 'qris', child: Text('QRIS')),
-                  ],
-                  onChanged: (value) {
-                    setDialogState(() {
-                      selectedMetode = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                // Filter Tanggal
-                const Text(
-                  'Tanggal Pembayaran:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
-                          final date = await showDatePicker(
-                            context: context,
-                            initialDate: startDate ?? DateTime.now(),
-                            firstDate: DateTime(2020),
-                            lastDate: DateTime.now(),
-                          );
-                          if (date != null) {
-                            setDialogState(() {
-                              startDate = date;
-                            });
-                          }
-                        },
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Dari Tanggal',
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                            suffixIcon: Icon(Icons.calendar_today),
-                          ),
-                          child: Text(
-                            startDate != null ? _formatDate(startDate!) : 'Pilih tanggal',
-                            style: TextStyle(
-                              color: startDate != null ? Colors.black : Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () async {
-                          final date = await showDatePicker(
-                            context: context,
-                            initialDate: endDate ?? DateTime.now(),
-                            firstDate: startDate ?? DateTime(2020),
-                            lastDate: DateTime.now(),
-                          );
-                          if (date != null) {
-                            setDialogState(() {
-                              endDate = date;
-                            });
-                          }
-                        },
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            labelText: 'Sampai Tanggal',
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                            suffixIcon: Icon(Icons.calendar_today),
-                          ),
-                          child: Text(
-                            endDate != null ? _formatDate(endDate!) : 'Pilih tanggal',
-                            style: TextStyle(
-                              color: endDate != null ? Colors.black : Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                setDialogState(() {
-                  selectedStatus = null;
-                  selectedMetode = null;
-                  startDate = null;
-                  endDate = null;
-                });
+                 // Reset
+                 provider.clearFilters();
+                 Navigator.pop(context);
               },
-              child: const Text('Reset'),
+              child: const Text('Reset', style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Batal'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                try {
-                  final filteredPembayaran = await _transaksiService.filterPembayaran(
-                    status: selectedStatus,
-                    metodePembayaran: selectedMetode,
-                    startDate: startDate,
-                    endDate: endDate,
-                  );
-                  
-                  Navigator.pop(context);
-                  
-                  // Tampilkan hasil filter
-                  _showFilterPembayaranResults(filteredPembayaran);
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
+              onPressed: () {
+                provider.setFilters(
+                  status: selectedStatus,
+                  startDate: startDate,
+                  endDate: endDate,
+                );
+                Navigator.pop(context);
               },
               child: const Text('Terapkan'),
             ),
@@ -2919,7 +1786,8 @@ class _KasirDashboardState extends State<KasirDashboard> {
   }
 
   void _detailIsiLaundry() {
-    if (daftarLaundryMasuk.isEmpty) {
+    final provider = context.read<TransaksiProvider>();
+    if (provider.transaksi.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Belum ada transaksi laundry'),
@@ -2938,9 +1806,9 @@ class _KasirDashboardState extends State<KasirDashboard> {
           width: double.maxFinite,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: daftarLaundryMasuk.length,
+            itemCount: provider.transaksi.length,
             itemBuilder: (context, index) {
-              final transaksi = daftarLaundryMasuk[index];
+              final transaksi = provider.transaksi[index];
               return ListTile(
                 leading: const Icon(Icons.receipt),
                 title: Text(transaksi.customerName),
@@ -2965,17 +1833,16 @@ class _KasirDashboardState extends State<KasirDashboard> {
   }
 
   void _showDetailLaundry(Transaksi transaksi) async {
-    // Load detail dari map atau database
-    List<DetailLaundry> detailList = detailLaundryMap[transaksi.id] ?? [];
+    // Load detail dari provider atau database
+    final provider = context.read<TransaksiProvider>();
+    List<DetailLaundry> detailList = provider.getDetailsFor(transaksi.id);
     
-    // Jika belum ada di map, load dari database
+    // Jika belum ada di provider (misal riwayat lama), load dari database
     if (detailList.isEmpty) {
-      detailList = await _transaksiService.getDetailLaundryByTransaksiId(transaksi.id);
-      // Simpan ke map untuk next time
-      if (detailList.isNotEmpty) {
-        setState(() {
-          detailLaundryMap[transaksi.id] = detailList;
-        });
+      try {
+        detailList = await _transaksiService.getDetailLaundryByTransaksiId(transaksi.id);
+      } catch (e) {
+        print('Error loading detail: $e');
       }
     }
 
@@ -3019,7 +1886,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                           Text(
                             '${transaksi.customerName} - ID: ${transaksi.id}',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 12,
                             ),
                           ),
@@ -3097,7 +1964,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                                                   ),
                                                 if (detail.luas != null)
                                                   Text(
-                                                    'Luas: ${detail.luas} m²',
+                                                    'Luas: ${detail.luas} mÂ²',
                                                     style: TextStyle(
                                                       fontSize: 11,
                                                       color: Colors.grey[600],
@@ -3359,7 +2226,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                         );
 
                         // Reload data
-                        _loadData();
+                        await context.read<TransaksiProvider>().loadDashboardData();
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -3436,7 +2303,10 @@ class _KasirDashboardState extends State<KasirDashboard> {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 500),
+            constraints: BoxConstraints(
+              maxWidth: 500,
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
             child: Form(
               key: formKey,
               child: Column(
@@ -3471,7 +2341,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                               Text(
                                 '${transaksi.customerName} - ${transaksi.id}',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 12,
                                 ),
                               ),
@@ -3593,11 +2463,51 @@ class _KasirDashboardState extends State<KasirDashboard> {
                             return null;
                           },
                         ),
-                        // Upload bukti pembayaran (untuk transfer/qris)
-                        if (metodePembayaran != 'cash') ...[
+                        // Info QRIS gateway
+                        if (metodePembayaran == 'qris') ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.green[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.green[200]!),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.qr_code_2, color: Colors.green[700]),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Pembayaran QRIS',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green[800],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'QR code akan ditampilkan setelah klik "Bayar dengan QRIS"',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.green[700],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        // Upload bukti pembayaran (untuk transfer saja)
+                        if (metodePembayaran == 'transfer') ...[
                           const SizedBox(height: 16),
                           Text(
-                            'Bukti Pembayaran ${metodePembayaran == 'transfer' ? '(Transfer Bank)' : '(QRIS)'}',
+                            'Bukti Pembayaran (Transfer Bank)',
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
@@ -3726,11 +2636,11 @@ class _KasirDashboardState extends State<KasirDashboard> {
                               ),
                             ),
                           ],
-                          if (metodePembayaran != 'cash' && buktiPembayaranPath == null)
+                          if (metodePembayaran == 'transfer' && buktiPembayaranPath == null)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                'Bukti pembayaran wajib diupload untuk ${metodePembayaran == 'transfer' ? 'transfer bank' : 'QRIS'}',
+                                'Bukti pembayaran wajib diupload untuk transfer bank',
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: Colors.orange[700],
@@ -3758,17 +2668,47 @@ class _KasirDashboardState extends State<KasirDashboard> {
                           child: const Text('Batal'),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: () async {
                             if (!formKey.currentState!.validate()) {
                               return;
                             }
                             
-                            // Validasi bukti untuk transfer/qris
-                            if (metodePembayaran != 'cash' && buktiPembayaranPath == null) {
+                            // Untuk QRIS, tampilkan QR Code dialog
+                            if (metodePembayaran == 'qris') {
+                              final jumlah = double.parse(jumlahController.text);
+                              Navigator.pop(context); // Close payment form
+                              
+                              // Show QRIS payment dialog
+                              final result = await showDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => QrisPaymentDialog(
+                                  transaksi: transaksi,
+                                  amount: jumlah,
+                                  onPaymentSuccess: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Pembayaran QRIS berhasil!'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                              
+                              // Reload data after QRIS dialog closes
+                              if (result == true) {
+                                await context.read<TransaksiProvider>().loadDashboardData();
+                              }
+                              return;
+                            }
+                            
+                            // Validasi bukti untuk transfer
+                            if (metodePembayaran == 'transfer' && buktiPembayaranPath == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Bukti pembayaran wajib diupload untuk ${metodePembayaran == 'transfer' ? 'transfer bank' : 'QRIS'}'),
+                                const SnackBar(
+                                  content: Text('Bukti pembayaran wajib diupload untuk transfer bank'),
                                   backgroundColor: Colors.orange,
                                 ),
                               );
@@ -3778,7 +2718,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                             try {
                               final jumlah = double.parse(jumlahController.text);
                               
-                              // Buat pembayaran
+                              // Buat pembayaran (untuk cash dan transfer)
                               final pembayaran = Pembayaran(
                                 id: 'PAY_${DateTime.now().millisecondsSinceEpoch}',
                                 transaksiId: transaksi.id,
@@ -3801,7 +2741,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
                               );
 
                               // Reload data
-                              _loadData();
+                              await context.read<TransaksiProvider>().loadDashboardData();
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -3812,10 +2752,17 @@ class _KasirDashboardState extends State<KasirDashboard> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor: metodePembayaran == 'qris' 
+                                ? Colors.green 
+                                : Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Text('Simpan Pembayaran'),
+                          icon: Icon(metodePembayaran == 'qris' 
+                              ? Icons.qr_code_2 
+                              : Icons.payment),
+                          label: Text(metodePembayaran == 'qris' 
+                              ? 'Bayar dengan QRIS' 
+                              : 'Simpan Pembayaran'),
                         ),
                       ],
                     ),
@@ -3830,134 +2777,12 @@ class _KasirDashboardState extends State<KasirDashboard> {
   }
 
   void _cetakStruk(Transaksi transaksi) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Struk Transaksi'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('ID: ${transaksi.id}'),
-              Text('Customer: ${transaksi.customerName}'),
-              Text('Telepon: ${transaksi.customerPhone}'),
-              Text('Tanggal: ${_formatDateTime(transaksi.tanggalMasuk)}'),
-              Text('Total: Rp ${_formatCurrency(transaksi.totalHarga)}'),
-              if (transaksi.catatan != null)
-                Text('Catatan: ${transaksi.catatan}'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Struk berhasil dicetak')),
-              );
-            },
-            icon: const Icon(Icons.print),
-            label: const Text('Cetak'),
-          ),
-        ],
-      ),
-    );
+    PrintService.showPrintDialog(context, transaksi);
   }
 
-  // Helper Methods
-  String _formatCurrency(double amount) {
-    return amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]}.',
-    );
-  }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
 
-  String _formatStatus(String status) {
-    switch (status) {
-      case 'pending':
-        return 'Pending';
-      case 'diterima':
-        return 'Diterima';
-      case 'proses':
-        return 'Sedang Diproses';
-      case 'selesai':
-        return 'Selesai';
-      case 'dikirim':
-        return 'Dikirim';
-      default:
-        return status;
-    }
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'diterima':
-        return Colors.blue;
-      case 'proses':
-        return Colors.blue[700]!;
-      case 'selesai':
-        return Colors.green;
-      case 'dikirim':
-        return Colors.purple;
-      default:
-        return Colors.black;
-    }
-  }
-
-  // Search and Filter UI
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: Colors.grey),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Cari transaksi (ID, nama customer, no. telepon)',
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
-              ),
-            ),
-          ),
-          if (_searchQuery.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.clear, size: 20),
-              onPressed: () {
-                _searchController.clear();
-                setState(() {
-                  _searchQuery = '';
-                });
-                _loadData();
-              },
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterInfo() {
+  Widget _buildFilterInfo(TransaksiProvider provider) {
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 16),
@@ -3986,37 +2811,36 @@ class _KasirDashboardState extends State<KasirDashboard> {
                   spacing: 8,
                   runSpacing: 4,
                   children: [
-                    if (_filterStatus != null)
+                    if (provider.filterStatus != null)
                       Chip(
-                        label: Text('Status: ${_formatStatus(_filterStatus!)}'),
+                        label: Text('Status: ${_formatStatus(provider.filterStatus!)}'),
                         backgroundColor: Colors.blue[100],
                         labelStyle: const TextStyle(fontSize: 11),
                         onDeleted: () {
-                          setState(() {
-                            _filterStatus = null;
-                            _checkFilterState();
-                          });
-                          _loadData();
+                          provider.setFilters(
+                             status: null, 
+                             startDate: provider.filterStartDate, 
+                             endDate: provider.filterEndDate
+                          );
                         },
                       ),
-                    if (_filterStartDate != null || _filterEndDate != null)
+                    if (provider.filterStartDate != null || provider.filterEndDate != null)
                       Chip(
                         label: Text(
-                          _filterStartDate != null && _filterEndDate != null
-                              ? 'Tanggal: ${_formatDate(_filterStartDate!)} - ${_formatDate(_filterEndDate!)}'
-                              : _filterStartDate != null
-                                  ? 'Dari: ${_formatDate(_filterStartDate!)}'
-                                  : 'Sampai: ${_formatDate(_filterEndDate!)}',
+                          provider.filterStartDate != null && provider.filterEndDate != null
+                              ? 'Tanggal: ${_formatDate(provider.filterStartDate!)} - ${_formatDate(provider.filterEndDate!)}'
+                              : provider.filterStartDate != null
+                                  ? 'Dari: ${_formatDate(provider.filterStartDate!)}'
+                                  : 'Sampai: ${_formatDate(provider.filterEndDate!)}',
                         ),
                         backgroundColor: Colors.blue[100],
                         labelStyle: const TextStyle(fontSize: 11),
                         onDeleted: () {
-                          setState(() {
-                            _filterStartDate = null;
-                            _filterEndDate = null;
-                            _checkFilterState();
-                          });
-                          _loadData();
+                          provider.setFilters(
+                            status: provider.filterStatus,
+                            startDate: null,
+                            endDate: null,
+                          );
                         },
                       ),
                   ],
@@ -4026,13 +2850,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                _filterStatus = null;
-                _filterStartDate = null;
-                _filterEndDate = null;
-                _isFiltered = false;
-              });
-              _loadData();
+              provider.clearFilters();
             },
             child: const Text('Hapus Filter'),
           ),
@@ -4041,66 +2859,11 @@ class _KasirDashboardState extends State<KasirDashboard> {
     );
   }
 
-  void _checkFilterState() {
-    _isFiltered = _filterStatus != null || _filterStartDate != null || _filterEndDate != null;
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pencarian Transaksi'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Cari (ID, Nama, No. Telepon)',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              autofocus: true,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _loadData();
-              },
-              child: const Text('Cari'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _searchController.clear();
-              setState(() {
-                _searchQuery = '';
-              });
-              Navigator.pop(context);
-              _loadData();
-            },
-            child: const Text('Hapus'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showFilterDialog() async {
-    String? selectedStatus = _filterStatus;
-    DateTime? startDate = _filterStartDate;
-    DateTime? endDate = _filterEndDate;
+  void _showFilterPembayaranDialog() async {
+    final provider = context.read<TransaksiProvider>();
+    String? selectedStatus = provider.filterStatus; 
+    DateTime? startDate = provider.filterStartDate;
+    DateTime? endDate = provider.filterEndDate;
 
     await showDialog(
       context: context,
@@ -4232,14 +2995,12 @@ class _KasirDashboardState extends State<KasirDashboard> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _filterStatus = selectedStatus;
-                  _filterStartDate = startDate;
-                  _filterEndDate = endDate;
-                  _checkFilterState();
-                });
+                provider.setFilters(
+                  status: selectedStatus,
+                  startDate: startDate,
+                  endDate: endDate,
+                );
                 Navigator.pop(context);
-                _loadData();
               },
               child: const Text('Terapkan'),
             ),
@@ -4278,7 +3039,7 @@ class _KasirDashboardState extends State<KasirDashboard> {
         String jenis = detail.jenisBarang == 'tebal' ? 'Tebal/Mushola' : detail.jenisBarang.toUpperCase();
         label = 'Karpet $jenis';
         if (detail.luas != null) {
-          label += ' (${detail.luas} m²)';
+          label += ' (${detail.luas} mÂ²)';
         }
         break;
       default:
@@ -4305,6 +3066,42 @@ class _KasirDashboardState extends State<KasirDashboard> {
         return Icons.carpenter;
       default:
         return Icons.checkroom;
+    }
+  }
+
+  String _formatCurrency(double amount) {
+    return NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(amount);
+  }
+
+  String _formatDateTime(DateTime date) {
+    return DateFormat('dd MMM yyyy HH:mm').format(date);
+  }
+  
+  String _formatDate(DateTime date) {
+    return DateFormat('dd MMM yyyy').format(date);
+  }
+
+  String _formatStatus(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending': return 'Pending';
+      case 'proses': return 'Proses';
+      case 'selesai': return 'Selesai';
+      case 'diterima': return 'Diterima';
+      case 'lunas': return 'Lunas';
+      case 'belum_lunas': return 'Belum Lunas';
+      default: return status;
+    }
+  }
+
+  Color _getStatusColor(String status) {
+     switch (status.toLowerCase()) {
+      case 'pending': return Colors.orange;
+      case 'proses': return Colors.blue;
+      case 'selesai': return Colors.green;
+      case 'diterima': return Colors.teal;
+      case 'lunas': return Colors.green;
+      case 'belum_lunas': return Colors.orange;
+      default: return Colors.grey;
     }
   }
 }

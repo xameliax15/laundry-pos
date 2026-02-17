@@ -1,0 +1,124 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Login - Owner" id="login-owner">
+    <mxGraphModel dx="594" dy="871" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-2" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" value="system" vertex="1">
+          <mxGeometry height="610" width="370" x="520" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-5" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="menampilkan halaman login" vertex="1">
+          <mxGeometry height="40" width="147.5" x="106.25" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="authService" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;" value="AuthService.login()&#xa;(Backend: Supabase Auth)" vertex="1">
+          <mxGeometry height="40" width="160" x="93.75" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rhombus;whiteSpace=wrap;html=1;" value="Kredensial&#xa;Valid?" vertex="1">
+          <mxGeometry height="60" width="65" x="80" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="authService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errorMsg" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampil Error&#xa;&#39;Login gagal. Periksa&#xa;username dan password&#xa;Anda.&#39;" vertex="1">
+          <mxGeometry height="70" width="140" x="203.75" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="errorMsg" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-8" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="errorMsg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="errorMsg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="checkRole" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="checkRole" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;" value="Check user.role&#xa;(dari database users)" vertex="1">
+          <mxGeometry height="40" width="160" x="32.5" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-26" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="redirectOwner">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-27" connectable="0" parent="rH7k2qrup1SgX6L-r2Rd-26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="ya" vertex="1">
+          <mxGeometry relative="1" x="0.4967" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec2" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rhombus;whiteSpace=wrap;html=1;" value="Role =&#xa;owner?" vertex="1">
+          <mxGeometry height="70" width="67.5" x="253.75" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="checkRole" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-47" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="redirectOther" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="redirectOther" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;" value="Redirect ke Dashboard&#xa;sesuai role&#xa;(kasir/kurir)" vertex="1">
+          <mxGeometry height="50" width="140" x="217.5" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="redirectOther" value="">
+          <mxGeometry relative="1" x="-0.0056" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-28" connectable="0" parent="e12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="tidak" vertex="1">
+          <mxGeometry relative="1" x="0.3256" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-46" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-2" source="redirectOwner" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="113" y="546" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redirectOwner" parent="rH7k2qrup1SgX6L-r2Rd-2" style="rounded=1;whiteSpace=wrap;html=1;" value="menampilkan dashboard owner" vertex="1">
+          <mxGeometry height="60" width="160" x="32.5" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="rH7k2qrup1SgX6L-r2Rd-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="93.75" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-1" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="Login owner" vertex="1">
+          <mxGeometry height="610" width="270" x="250" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-48" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-1" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="openLogin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="rH7k2qrup1SgX6L-r2Rd-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="123.5" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-49" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="139.75" y="130" as="sourcePoint" />
+            <mxPoint x="138.47058823529414" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="openLogin" parent="rH7k2qrup1SgX6L-r2Rd-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="Buka Halaman Login&#xa;(/login)" vertex="1">
+          <mxGeometry height="40" width="147.5" x="65" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-51" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-1" source="inputUser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="inputPass">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inputUser" parent="rH7k2qrup1SgX6L-r2Rd-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="Input Username/Email&#xa;(owner)" vertex="1">
+          <mxGeometry height="30" width="145" x="65" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-52" edge="1" parent="rH7k2qrup1SgX6L-r2Rd-1" source="inputPass" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="clickLogin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inputPass" parent="rH7k2qrup1SgX6L-r2Rd-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;" value="Input Password" vertex="1">
+          <mxGeometry height="30" width="150" x="65" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="clickLogin" parent="rH7k2qrup1SgX6L-r2Rd-1" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik &#39;Sign In to&#xa;Dashboard&#39;" vertex="1">
+          <mxGeometry height="30" width="160" x="61.25" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-4" edge="1" parent="1" source="openLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="rH7k2qrup1SgX6L-r2Rd-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="589.9999999999998" y="240.00000000000023" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rH7k2qrup1SgX6L-r2Rd-22" edge="1" parent="1" source="clickLogin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="authService">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

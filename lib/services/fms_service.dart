@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../core/logger.dart';
 
@@ -11,12 +12,12 @@ class FmsService {
   static const String _bucketName = 'laundry_files';
 
   /// Upload file ke Supabase Storage
-  Future<String?> uploadFile(String filePath, {String? customName}) async {
+  Future<String?> uploadFile(File file, {String? customName}) async {
     try {
       final fileName = customName ?? DateTime.now().millisecondsSinceEpoch.toString();
-      final response = await _supabase.storage.from(_bucketName).upload(
+      await _supabase.storage.from(_bucketName).upload(
             fileName,
-            filePath,
+            file,
           );
       logger.i('✅ File uploaded successfully: $fileName');
       return fileName;

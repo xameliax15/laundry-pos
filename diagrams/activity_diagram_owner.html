@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Diagram - Owner</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            text-align: center;
+            font-size: 18px;
+            font-weight: normal;
+            margin-bottom: 30px;
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .info h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+
+        .info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .info li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Activity Diagram - Owner</h1>
+        <h2>Sistem POS Laundry Trias Laundry</h2>
+
+        <div class="info">
+            <h3>Ringkasan Use Cases Owner</h3>
+            <ul>
+                <li><strong>UC-01</strong>: Login ke Sistem</li>
+                <li><strong>UC-17</strong>: Lihat Dashboard Analitik</li>
+                <li><strong>UC-18</strong>: Lihat Total Omzet</li>
+                <li><strong>UC-19</strong>: Lihat Grafik Pendapatan</li>
+                <li><strong>UC-20</strong>: Verifikasi Pembayaran COD</li>
+                <li><strong>UC-21</strong>: Lihat Laporan</li>
+                <li><strong>UC-22</strong>: Kelola User</li>
+                <li><strong>UC-23</strong>: Monitoring Kasir & Kurir</li>
+                <li><strong>UC-24</strong>: Reset Riwayat Transaksi</li>
+            </ul>
+        </div>
+
+        <div class="mermaid">
+            flowchart TD
+            Start([Start: Owner]) --> Login[Login ke Sistem]
+            Login --> ValidasiAuth{Validasi<br />Kredensial}
+
+            ValidasiAuth -->|Invalid| ErrorLogin[Tampilkan Error Login]
+            ErrorLogin --> Login
+
+            ValidasiAuth -->|Valid| DashboardOwner[Dashboard Owner]
+            DashboardOwner --> LoadDashboard[Load Dashboard Analytics]
+
+            LoadDashboard --> TampilkanMetrik[Tampilkan Metrik:<br />- Total Omzet<br />- Pendapatan Hari Ini<br />-
+            Jumlah Transaksi<br />- Grafik Pendapatan]
+
+            TampilkanMetrik --> MenuPilihan{Pilih Menu}
+
+            MenuPilihan -->|Dashboard| RefreshDashboard[Refresh Dashboard]
+            RefreshDashboard --> HitungMetrik[Hitung All Metrics<br />& Generate Grafik]
+            HitungMetrik --> TampilkanMetrik
+
+            MenuPilihan -->|Lihat Laporan| PilihJenisLaporan{Pilih Jenis<br />Laporan}
+
+            PilihJenisLaporan -->|Transaksi Hari Ini| GetTransaksiHariIni[Ambil Transaksi Hari Ini]
+            GetTransaksiHariIni --> TampilkanDaftarTransaksi[Tampilkan Daftar Transaksi]
+
+            PilihJenisLaporan -->|Pendapatan Bulanan| PilihBulan[Pilih Bulan & Tahun]
+            PilihBulan --> HitungPendapatanBulanan[Hitung Pendapatan Bulanan]
+            HitungPendapatanBulanan --> TampilkanGrafik
+
+            PilihJenisLaporan -->|Total Omzet| TampilkanTotalOmzet[Tampilkan Total Omzet<br />Keseluruhan]
+            TampilkanTotalOmzet --> TampilkanGrafik
+
+            TampilkanDaftarTransaksi --> ExportOption
+            TampilkanGrafik[Tampilkan Grafik/Tabel Pendapatan] --> ExportOption{Export<br />Laporan?}
+
+            ExportOption -->|Ya| ExportLaporanPDF[Export ke PDF/Excel]
+            ExportLaporanPDF --> DashboardOwner
+
+            ExportOption -->|Tidak| DashboardOwner
+
+            MenuPilihan -->|Verifikasi COD| GetPembayaranCOD[Ambil Daftar Pembayaran COD<br />Status: Menunggu
+            Verifikasi]
+            GetPembayaranCOD --> CekAdaCOD{Ada Pembayaran<br />COD?}
+
+            CekAdaCOD -->|Tidak| TidakAdaCOD[Tidak Ada Pembayaran<br />yang Perlu Diverifikasi]
+            TidakAdaCOD --> DashboardOwner
+
+            CekAdaCOD -->|Ya| TampilkanDaftarCOD[Tampilkan Daftar<br />Pembayaran COD]
+            TampilkanDaftarCOD --> PilihCOD[Pilih Pembayaran untuk Verifikasi]
+
+            PilihCOD --> LihatDetailCOD[Lihat Detail Pembayaran:<br />- Transaksi<br />- Kurir<br />- Jumlah<br />-
+            Bukti Foto]
+
+            LihatDetailCOD --> KeputusanVerifikasi{Keputusan}
+
+            KeputusanVerifikasi -->|Verifikasi| KonfirmasiVerifikasi[Konfirmasi Verifikasi]
+            KonfirmasiVerifikasi --> UpdateStatusLunas[Update Status Pembayaran:<br />LUNAS]
+            UpdateStatusLunas --> DashboardOwner
+
+            KeputusanVerifikasi -->|Tolak| InputAlasanPenolakan[Input Alasan Penolakan]
+            InputAlasanPenolakan --> UpdateStatusDitolak[Update Status Pembayaran:<br />DITOLAK]
+            UpdateStatusDitolak --> DashboardOwner
+
+            KeputusanVerifikasi -->|Batal| DashboardOwner
+
+            MenuPilihan -->|Kelola User| TampilkanDaftarUser[Tampilkan Daftar User<br />Kasir & Kurir]
+            TampilkanDaftarUser --> AksiUser{Pilih Aksi}
+
+            AksiUser -->|Tambah/Edit User| FormUser[Form User]
+            FormUser --> InputDataUser[Input Data User:<br />- Email<br />- Password<br />- Nama<br />- Role]
+
+            InputDataUser --> ValidasiDataUser{Validasi<br />Data?}
+            ValidasiDataUser -->|Invalid| ErrorUser[Tampilkan Error]
+            ErrorUser --> InputDataUser
+
+            ValidasiDataUser -->|Valid| SimpanUser[Simpan User via Supabase Auth]
+            SimpanUser --> TampilkanDaftarUser
+
+            AksiUser -->|Aktif/Nonaktifkan| ToggleStatusUser[Toggle Status User]
+            ToggleStatusUser --> TampilkanDaftarUser
+
+            AksiUser -->|Kembali| DashboardOwner
+
+            MenuPilihan -->|Monitoring| TampilkanMonitoring[Tampilkan Monitoring<br />Kasir & Kurir]
+            TampilkanMonitoring --> GetDaftarKaryawan[Ambil Daftar Karyawan]
+            GetDaftarKaryawan --> TampilkanStatusKaryawan[Tampilkan Status:<br />- Nama<br />- Role<br />- Status<br />-
+            Aktivitas Terakhir]
+            TampilkanStatusKaryawan --> DashboardOwner
+
+            MenuPilihan -->|Reset Riwayat| KonfirmasiReset[Dialog Konfirmasi]
+            KonfirmasiReset --> InputKonfirmasiText[Input Teks Konfirmasi]
+
+            InputKonfirmasiText --> ValidasiKonfirmasi{Konfirmasi<br />Benar?}
+            ValidasiKonfirmasi -->|Tidak| BatalReset[Batal Reset]
+            BatalReset --> DashboardOwner
+
+            ValidasiKonfirmasi -->|Ya| HapusSemuaTransaksi[Hapus Semua Data Transaksi]
+            HapusSemuaTransaksi --> ResetSelesai[Reset Berhasil]
+            ResetSelesai --> DashboardOwner
+
+            MenuPilihan -->|Logout| LogoutOwner[Logout dari Sistem]
+            LogoutOwner --> End([End: Session Berakhir])
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'basis',
+                padding: 20
+            }
+        });
+    </script>
+</body>
+
+</html>

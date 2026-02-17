@@ -103,13 +103,22 @@ class AuthService {
       return _normalizeEmail(input);
     }
 
+    // Query dengan case-insensitive matching
     final userRow = await _supabase
         .from('users')
         .select('email')
-        .eq('username', input)
+        .ilike('username', input)
         .maybeSingle();
+    
+    logger.i('🔍 Looking for username: "$input", found: ${userRow != null}');
+    
     final email = userRow?['email'] as String?;
-    if (email == null) return null;
+    if (email == null) {
+      logger.w('⚠️ Username "$input" not found in database');
+      return null;
+    }
+    
+    logger.i('✓ Resolved username "$input" to email: $email');
     return _normalizeEmail(email);
   }
 

@@ -26,20 +26,14 @@ class DatabaseHelper {
   static void initDatabaseFactory() {
     if (_initialized) {
       logger.d('✓ Database factory already initialized');
-      // Verify it's still valid
-      if (!kIsWeb && databaseFactory == null) {
-        logger.w('⚠️ databaseFactory is null despite being initialized, re-initializing...');
-        _initialized = false;
-      } else {
-        return;
-      }
+      return;
     }
     
-    print('Initializing database factory...');
+    logger.d('Initializing database factory...');
     
     // Web platform uses sqflite_common_ffi_web
     if (kIsWeb) {
-      print('Web platform detected, initializing FFI web factory (no web worker)...');
+      logger.d('Web platform detected, initializing FFI web factory (no web worker)...');
       // Avoid shared worker requirement (sqflite_sw.js) by using noWebWorker.
       // Use local sqlite3.wasm from web/ to avoid network/cert issues.
       final webOptions = SqfliteFfiWebOptions(
@@ -63,26 +57,20 @@ class DatabaseHelper {
         
         if (isDesktop) {
           // Initialize FFI database factory for desktop
-          print('Desktop platform detected ($defaultTargetPlatform), initializing FFI...');
+          logger.d('Desktop platform detected ($defaultTargetPlatform), initializing FFI...');
           sqfliteFfiInit();
           databaseFactory = databaseFactoryFfi;
-          
-          // Verify that databaseFactory is set
-          if (databaseFactory == null) {
-            throw Exception('databaseFactory is still null after sqfliteFfiInit()');
-          }
-          print('✓ Database factory initialized with FFI for $defaultTargetPlatform');
+          logger.d('✓ Database factory initialized with FFI for $defaultTargetPlatform');
           _initialized = true;
           return; // Success, exit early
         } else {
           // Mobile platform (Android/iOS) - use default factory
-          print('Mobile platform detected, using default factory');
+          logger.d('Mobile platform detected, using default factory');
           _initialized = true;
           return;
         }
       } catch (e, stackTrace) {
-        print('❌ FFI initialization failed: $e');
-        print('Stack trace: $stackTrace');
+        logger.e('❌ FFI initialization failed: $e');
         
         // For desktop, this is critical - rethrow
         final isDesktop = defaultTargetPlatform == TargetPlatform.windows ||
@@ -92,7 +80,7 @@ class DatabaseHelper {
           throw Exception('Failed to initialize database factory for desktop: $e');
         }
         // For mobile, fall through to default
-        print('Falling back to default factory for mobile');
+        logger.d('Falling back to default factory for mobile');
         _initialized = true;
         return;
       }

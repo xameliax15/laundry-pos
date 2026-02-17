@@ -8,9 +8,12 @@ import '../../services/transaksi_service.dart';
 import 'user_management_page.dart';
 import '../../services/user_service.dart';
 import '../../services/auth_service.dart';
-import 'user_management_page.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/sidebar_layout.dart';
+import '../../widgets/bottom_nav_bar.dart';
+import '../../services/pdf_service.dart';
+import 'owner_mobile_view.dart';
+import '../kasir/kasir_riwayat.dart';
 
 class OwnerDashboard extends StatefulWidget {
   const OwnerDashboard({super.key});
@@ -25,7 +28,9 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   double totalOmzet = 0.0;
   double pendapatanHarian = 0.0;
   double pendapatanBulanan = 0.0;
+
   int transaksiCODBelumDiverifikasi = 0;
+  int totalTransaksiCount = 0; // New state
 
   // Data untuk grafik (7 hari terakhir)
   List<Map<String, dynamic>> grafikPendapatan = [];
@@ -68,7 +73,11 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
       // Load pendapatan bulanan (bulan ini)
       final now = DateTime.now();
       final pendapatanBulan = await _transaksiService.getPendapatanBulanan(now.year, now.month);
+      
+      // Load total transaksi count
+      final trxCount = await _transaksiService.getTotalTransaksiCount();
 
+      // Load grafik pendapatan 7 hari terakhir
       // Load grafik pendapatan 7 hari terakhir
       final grafik = await _loadGrafikPendapatan();
 
@@ -137,6 +146,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
         pendapatanHarian = pendapatanHari;
         pendapatanBulanan = pendapatanBulan;
         grafikPendapatan = grafik;
+        totalTransaksiCount = trxCount; // Update state
         transaksiCOD = codList;
         transaksiCODBelumDiverifikasi = codList.length;
         dataKasir = dataKasirList;
@@ -172,6 +182,304 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        if (isMobile) {
+          return _buildMobileLayout();
+        } else {
+          return _buildDesktopLayout();
+        }
+      },
+    );
+  }
+
+  // State for mobile tabs
+  int _mobileTabIndex = 0;
+
+  Widget _buildMobileLayout() {
+    final authService = AuthService();
+    final user = authService.getCurrentUser();
+    final userName = user?.username ?? 'Owner';
+    
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : IndexedStack(
+                index: _mobileTabIndex,
+                children: [
+                  // Tab 0: Dashboard
+                  OwnerMobileView(
+                    userName: userName,
+                    totalOmzet: totalOmzet,
+                    pendapatanHariIni: pendapatanHarian,
+                    totalTransaksi: totalTransaksiCount,
+                    grafikPendapatan: grafikPendapatan,
+                    transaksiCODCount: transaksiCODBelumDiverifikasi,
+                    transaksiCOD: transaksiCOD.map((t) => {
+                      'id': t['id'],
+                      'customer_name': t['customerName'],
+                      'total_harga': t['jumlah'],
+                    }).toList(),
+                    onViewReport: () {
+                      setState(() => _mobileTabIndex = 1);
+                    },
+                    onManageUsers: () {
+                      setState(() => _mobileTabIndex = 2);
+                    },
+                    onVerifyPayments: () {
+                      setState(() => _mobileTabIndex = 3);
+                    },
+                    onSettings: () {},
+                    onSeeAllCOD: () {
+                      setState(() => _mobileTabIndex = 3);
+                    },
+                    onVerifyCOD: (trx) {
+                      final originalTrx = transaksiCOD.firstWhere(
+                        (t) => t['id'] == trx['id'],
+                        orElse: () => trx,
+                      );
+                      _verifikasiTransaksiCOD(originalTrx);
+                    },
+                    onDeleteHistory: _showResetRiwayatDialog,
+                    currentIndex: _mobileTabIndex,
+                    onTabChanged: (index) {
+                      setState(() => _mobileTabIndex = index);
+                    },
+                    onRefresh: _loadData,
+                    onLogout: () => AppRoutes.logout(context),
+                  ),
+
+                  // Tab 1: Laporan View (Embed content of _lihatLaporan)
+                  _buildLaporanEmbed(),
+
+                  // Tab 2: User Management
+                  const UserManagementPage(isEmbedded: true), 
+
+                  // Tab 3: Riwayat Pesanan
+                  const KasirRiwayat(isEmbedded: true),
+                ],
+              ),
+      ),
+      bottomNavigationBar: MobileBottomNavBar(
+        currentIndex: _mobileTabIndex,
+        onTap: (index) {
+          setState(() {
+            _mobileTabIndex = index;
+          });
+          // Refresh data if switching to dashboard
+          if (index == 0) _loadData();
+        },
+        onFabTap: () {
+          // Tombol tengah untuk verifikasi pembayaran COD
+          _verifikasiPembayaran();
+        },
+        fabIcon: Icons.verified,
+        items: const [
+          MobileNavItem(icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home'),
+          MobileNavItem(icon: Icons.assessment_outlined, activeIcon: Icons.assessment, label: 'Reports'),
+          MobileNavItem(icon: Icons.people_outline, activeIcon: Icons.people, label: 'Users'),
+          MobileNavItem(icon: Icons.history_outlined, activeIcon: Icons.history, label: 'Riwayat'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLaporanEmbed() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Laporan FMS',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.brandBlue,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.picture_as_pdf),
+                tooltip: 'Download PDF',
+                onPressed: _downloadLaporanPdf,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Period Selector
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedPeriod,
+                isExpanded: true,
+                items: const [
+                  DropdownMenuItem(value: 'Harian', child: Text('Laporan Harian')),
+                  DropdownMenuItem(value: 'Bulanan', child: Text('Laporan Bulanan')),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedPeriod = value;
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildLaporanItem('Total Omzet', 'Rp ${_formatCurrency(totalOmzet)}'),
+          if (selectedPeriod == 'Harian')
+             _buildLaporanItem('Pendapatan Harian', 'Rp ${_formatCurrency(pendapatanHarian)}'),
+          if (selectedPeriod == 'Bulanan')
+             _buildLaporanItem('Pendapatan Bulanan', 'Rp ${_formatCurrency(pendapatanBulanan)}'),
+          _buildLaporanItem('Transaksi COD Belum Diverifikasi', transaksiCODBelumDiverifikasi.toString()),
+          _buildLaporanItem('Total Kasir Aktif', dataKasir.length.toString()),
+          _buildLaporanItem('Total Kurir Aktif', dataKurir.length.toString()),
+          
+          const SizedBox(height: 24),
+          const Text(
+            'Detail Kasir',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...dataKasir.map((kasir) => Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.person)),
+              title: Text(kasir['username'] ?? 'Unknown'),
+              subtitle: Text(kasir['email'] ?? ''),
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVerificationEmbed() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Verifikasi Pembayaran COD',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.text,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _loadData,
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: transaksiCOD.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.check_circle_outline, size: 64, color: Colors.green[300]),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Semua transaksi COD lunas!',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: transaksiCOD.length,
+                  itemBuilder: (context, index) {
+                    final trx = transaksiCOD[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  trx['customerName'] ?? 'Pelanggan',
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Text(
+                                    'Perlu Verifikasi',
+                                    style: TextStyle(color: Colors.orange, fontSize: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text('ID: ${trx['id']}'),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Total: Rp ${_formatCurrency(trx['jumlah'])}',
+                              style: const TextStyle(
+                                color: AppColors.brandBlue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () => _verifikasiTransaksiCOD(trx),
+                                icon: const Icon(Icons.verified),
+                                label: const Text('Verifikasi Pembayaran'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.brandBlue,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopLayout() {
     return SidebarLayout(
       title: 'Dashboard Owner',
       items: [
@@ -194,10 +502,18 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
             ).then((_) => _loadData());
           },
         ),
+
         SidebarItem(
-          label: 'Lihat Laporan',
-          icon: Icons.description,
-          onTap: _lihatLaporan,
+          label: 'Riwayat Pesanan',
+          icon: Icons.history,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const KasirRiwayat(userRole: 'owner'),
+              ),
+            );
+          },
         ),
         SidebarItem(
           label: 'Keluar',
@@ -287,7 +603,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
                     Text(
                       'Total Omzet',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
                       ),
                     ),
@@ -334,7 +650,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: DropdownButton<String>(
@@ -676,7 +992,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
                               end: Alignment.topCenter,
                               colors: [
                                 Theme.of(context).colorScheme.primary,
-                                Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                                Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                               ],
                             ),
                             borderRadius: const BorderRadius.vertical(
@@ -965,7 +1281,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -1022,6 +1338,42 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   }
 
   // Action Methods
+  Future<void> _downloadLaporanPdf() async {
+    final now = DateTime.now();
+    DateTime startDate;
+    DateTime endDate = now;
+
+    if (selectedPeriod == 'Harian') {
+      startDate = DateTime(now.year, now.month, now.day);
+    } else {
+      // Bulanan
+      startDate = DateTime(now.year, now.month, 1);
+    }
+
+    try {
+      // Calculate totals based on period
+      final double revenue = selectedPeriod == 'Harian' ? pendapatanHarian : pendapatanBulanan;
+      
+      await PdfService().generateLaporanPdf(
+        title: 'Laporan FMS ($selectedPeriod)',
+        startDate: startDate,
+        endDate: endDate,
+        // Note: Use total count from state if available, otherwise estimate or 0
+        totalOrders: totalTransaksiCount, 
+        totalPendapatan: revenue.toInt(),
+        ordersSelesai: 0, // Placeholder as we don't have exact count for period
+        ordersDiproses: transaksiCODBelumDiverifikasi,
+        ordersPending: 0,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error generating PDF: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
   void _lihatLaporan() {
     showDialog(
       context: context,
@@ -1047,11 +1399,32 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
             child: const Text('Tutup'),
           ),
           ElevatedButton.icon(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Laporan berhasil diekspor')),
-              );
+              
+              // Get date range for report
+              final now = DateTime.now();
+              final startDate = DateTime(now.year, now.month, 1);
+              final endDate = now;
+              
+              try {
+                await PdfService().generateLaporanPdf(
+                  title: 'Laporan FMS',
+                  startDate: startDate,
+                  endDate: endDate,
+                  totalOrders: dataKasir.fold<int>(0, (sum, k) => sum + ((k['transaksiHariIni'] as int?) ?? 0)),
+                  totalPendapatan: totalOmzet.toInt(),
+                  ordersSelesai: (totalOmzet / 50000).round(),
+                  ordersDiproses: transaksiCODBelumDiverifikasi,
+                  ordersPending: 0,
+                );
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+                  );
+                }
+              }
             },
             icon: const Icon(Icons.download),
             label: const Text('Ekspor PDF'),
@@ -1114,18 +1487,9 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
             child: const Text('Batal'),
           ),
           ElevatedButton(
-            onPressed: () {
-              setState(() {
-                transaksiCOD.remove(transaksi);
-                transaksiCODBelumDiverifikasi--;
-              });
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Pembayaran berhasil diverifikasi'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              await _prosesVerifikasiCOD(transaksi);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
@@ -1137,6 +1501,94 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
       ),
     );
   }
+
+  Future<void> _prosesVerifikasiCOD(Map<String, dynamic> transaksi) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Memverifikasi pembayaran...'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    try {
+      final transaksiId = transaksi['id'] as String;
+      final jumlah = (transaksi['jumlah'] as num).toDouble();
+
+      // 1. Create pembayaran record with status 'lunas' for COD
+      final pembayaran = Pembayaran(
+        id: 'PBY_${DateTime.now().millisecondsSinceEpoch}',
+        transaksiId: transaksiId,
+        jumlah: jumlah,
+        tanggalBayar: DateTime.now(),
+        metodePembayaran: 'cod',
+        status: 'lunas',
+        buktiPembayaran: transaksi['buktiPembayaran'] as String?,
+      );
+      await _transaksiService.createPembayaran(pembayaran);
+
+      // 2. Update transaksi status to 'diterima'
+      await _transaksiService.updateStatusTransaksi(
+        transaksiId,
+        'diterima',
+      );
+
+      // Close loading dialog
+      if (mounted) {
+        Navigator.pop(context);
+      }
+
+      // 3. Update local state
+      setState(() {
+        transaksiCOD.removeWhere((t) => t['id'] == transaksiId);
+        transaksiCODBelumDiverifikasi = transaksiCOD.length;
+      });
+
+      // 4. Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pembayaran COD berhasil diverifikasi'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+
+      // 5. Reload data to ensure sync
+      await _loadData();
+
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) {
+        Navigator.pop(context);
+      }
+
+      logger.e('Error verifying COD payment', error: e);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal verifikasi: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
 
   void _lihatBuktiPembayaran(Map<String, dynamic> transaksi) {
     showDialog(

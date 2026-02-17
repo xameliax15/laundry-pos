@@ -1,0 +1,149 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Filter Pembayaran - Kasir" id="filter-pembayaran-kasir">
+    <mxGraphModel dx="1457" dy="869" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="filter pembayaran" vertex="1">
+          <mxGeometry height="980" width="800.9999999999995" x="380" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="clickFilter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="filterContent" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="535" y="200" />
+              <mxPoint x="180" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="filterContent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="selectFilter" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="showResults" value="Ya">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="625" />
+              <mxPoint x="430" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="noResults" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="showResults" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-2" parent="_hZKDJn2e5EUZA06n5oU-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kasir" vertex="1">
+          <mxGeometry height="960" width="400" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="_hZKDJn2e5EUZA06n5oU-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="179.99999999999955" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="clickFilter" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Filter Pembayaran&#39;" vertex="1">
+          <mxGeometry height="30" width="140" x="130" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="_hZKDJn2e5EUZA06n5oU-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickFilter" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="filterContent" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;align=center;labelBackgroundColor=none;" value="Dialog Filter:&lt;br&gt;1. Status Pembayaran:&lt;br&gt;   • Semua&lt;br&gt;   • Pending (belum bayar)&lt;br&gt;   • Lunas&lt;br&gt;2. Metode Pembayaran:&lt;br&gt;   • Semua&lt;br&gt;   • Tunai&lt;br&gt;   • QRIS&lt;br&gt;   • Transfer Bank&lt;br&gt;3. Range Tanggal:&lt;br&gt;   • Dari (startDate)&lt;br&gt;   • Sampai (endDate)" vertex="1">
+          <mxGeometry height="200" width="240" x="59.999999999999545" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="showResults" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Tampil hasil filter:&#xa;List pembayaran dengan:&#xa;- No transaksi&#xa;- Customer name&#xa;- Nominal&#xa;- Metode (icon)&#xa;- Status badge&#xa;- Tanggal" vertex="1">
+          <mxGeometry height="120" width="200" x="109.99999999999955" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="noResults" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Tampil:&#xa;&#39;Tidak ada pembayaran&#xa;sesuai filter&#39;" vertex="1">
+          <mxGeometry height="60" width="112.5" x="143.75" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="clearFilter" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Hapus Filter&#39;&#xa;→ Reset to default&#xa;(semua data)" vertex="1">
+          <mxGeometry height="40" width="130" x="126.25" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-13" edge="1" parent="_hZKDJn2e5EUZA06n5oU-2" source="close" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="close" parent="_hZKDJn2e5EUZA06n5oU-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Tutup&#39;" vertex="1">
+          <mxGeometry height="60" width="120" x="189.99999999999955" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="_hZKDJn2e5EUZA06n5oU-2" style="ellipse;whiteSpace=wrap;html=1;strokeWidth=3;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="229.99999999999955" y="905" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clearFilter" value="Ya">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="536" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="clearFilter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="reloadAll" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="191" y="795" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-3" parent="_hZKDJn2e5EUZA06n5oU-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="system" vertex="1">
+          <mxGeometry height="960" width="400.99999999999955" x="400" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_showFilterPembayaran&#xa;Dialog()" vertex="1">
+          <mxGeometry height="60" width="160" x="64.99999999999955" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="selectFilter" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="User pilih filter criteria" vertex="1">
+          <mxGeometry height="40" width="145" x="65" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="clickApply" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Terapkan&#39;" vertex="1">
+          <mxGeometry height="30" width="125" x="75" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="_hZKDJn2e5EUZA06n5oU-3" source="selectFilter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickApply" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="buildQuery" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;align=left;labelBackgroundColor=none;" value="Build filter query:&#xa;- WHERE status = ?&#xa;- AND metode = ?&#xa;- AND tanggal BETWEEN ? AND ?" vertex="1">
+          <mxGeometry height="80" width="200" x="37.499999999999545" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="_hZKDJn2e5EUZA06n5oU-3" source="clickApply" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="buildQuery" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="getPayments" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="getPembayaranByFilter()&#xa;(query database)" vertex="1">
+          <mxGeometry height="60" width="160" x="57.499999999999545" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="_hZKDJn2e5EUZA06n5oU-3" source="buildQuery" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="getPayments" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="_hZKDJn2e5EUZA06n5oU-3" source="getPayments" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="_hZKDJn2e5EUZA06n5oU-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Clear&#xa;Filter?" vertex="1">
+          <mxGeometry height="80" width="80" x="239.99999999999955" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadAll" parent="_hZKDJn2e5EUZA06n5oU-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Reload semua&#xa;pembayaran&#xa;(no filter)" vertex="1">
+          <mxGeometry height="50" width="155" x="37.5" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-8" edge="1" parent="_hZKDJn2e5EUZA06n5oU-3" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1090.0000000000005" y="720" as="sourcePoint" />
+            <mxPoint x="935.0000000000005" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dec1" parent="_hZKDJn2e5EUZA06n5oU-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Ada&#xa;hasil?" vertex="1">
+          <mxGeometry height="50" width="52.5" x="110" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="close" value="Tidak">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="725" />
+              <mxPoint x="370" y="725" />
+              <mxPoint x="370" y="865" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_hZKDJn2e5EUZA06n5oU-14" edge="1" parent="_hZKDJn2e5EUZA06n5oU-1" source="reloadAll" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="close">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

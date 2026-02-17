@@ -1,0 +1,164 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Reset Riwayat - Owner" id="reset-riwayat-owner">
+    <mxGraphModel dx="1310" dy="2389" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="280" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickReset" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Klik &#39;Reset Riwayat&#39;&#xa;dari Dashboard" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="clickReset" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showDialog" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="_showResetRiwayatDialog()" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="clickReset" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="showDialog" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="getTotal" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="getTotalTransaksiCount()&#xa;(hitung total transaksi)" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="showDialog" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="getTotal" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="showConfirm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;" value="Tampil Dialog Konfirmasi:&#xa;&#39;Reset Riwayat Transaksi&#39;&#xa;dengan warning &amp; info:&#xa;- Total Transaksi&#xa;- Detail Laundry&#xa;- Pembayaran&#xa;- Order Kurir&#xa;NOTE: Customer TIDAK dihapus" vertex="1">
+          <mxGeometry height="130" width="230" x="185" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="getTotal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="showConfirm" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Pilih&#xa;&#39;Ya,&#xa;Reset&#39;?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="showConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="resetFunc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="_resetRiwayat()&#xa;(mulai proses reset)" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="resetFunc" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteOrderKurir" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="DELETE FROM&#xa;order_kurir&#xa;(hapus semua order kurir)" vertex="1">
+          <mxGeometry height="70" width="140" x="60" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="deleteOrderKurir" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deletePembayaran" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="DELETE FROM&#xa;pembayaran&#xa;(hapus semua pembayaran)" vertex="1">
+          <mxGeometry height="70" width="140" x="230" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="deletePembayaran" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="deleteDetail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="DELETE FROM&#xa;detail_laundry&#xa;(hapus semua detail)" vertex="1">
+          <mxGeometry height="70" width="140" x="400" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="resetFunc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="deleteDetail" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="merge1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="285" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="deleteOrderKurir" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="910" />
+              <mxPoint x="300" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="deletePembayaran" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="deleteDetail" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="merge1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="910" />
+              <mxPoint x="300" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="deleteTransaksi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="DELETE FROM&#xa;transaksi&#xa;(hapus semua transaksi)&#xa;NOTE: Customer tetap ada" vertex="1">
+          <mxGeometry height="80" width="170" x="215" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="merge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="deleteTransaksi" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="loading" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="CircularProgressIndicator&#xa;&#39;Mereset riwayat...&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="deleteTransaksi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="loading" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Reset&#xa;Berhasil?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="loading" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="dec2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="successNotif" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Snackbar:&#xa;&#39;Riwayat berhasil direset&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="successNotif" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errorNotif" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Snackbar:&#xa;&#39;Gagal mereset riwayat.&#xa;Error: [message]&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="440" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="errorNotif" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reloadData" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="_loadData()&#xa;(refresh dashboard)" vertex="1">
+          <mxGeometry height="60" width="160" x="220" y="1440" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="successNotif" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="reloadData" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cancel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Tutup Dialog&#xa;(tetap di dashboard)" vertex="1">
+          <mxGeometry height="60" width="140" x="460" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="cancel" value="Batal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="280" y="1540" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="1" source="reloadData" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="end" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="end2" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="510" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="1" source="cancel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" edge="1" parent="1" source="errorNotif" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="end2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="1260" />
+              <mxPoint x="530" y="1260" />
+              <mxPoint x="530" y="710" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;" value="Pool" vertex="1">
+          <mxGeometry height="480" width="360" x="550.0000000000005" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-2" parent="ry0gdSkO8BXDv3cch0ZG-1" style="swimlane;startSize=20;html=1;" value="Lane 1" vertex="1">
+          <mxGeometry height="460" width="120" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-3" parent="ry0gdSkO8BXDv3cch0ZG-1" style="swimlane;startSize=20;html=1;" value="Lane 2" vertex="1">
+          <mxGeometry height="460" width="120" x="120" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ry0gdSkO8BXDv3cch0ZG-4" parent="ry0gdSkO8BXDv3cch0ZG-1" style="swimlane;startSize=20;html=1;" value="Lane 3" vertex="1">
+          <mxGeometry height="460" width="120" x="240" y="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

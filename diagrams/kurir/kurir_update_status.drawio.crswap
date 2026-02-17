@@ -1,0 +1,99 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Update Status - Kurir" id="kurir-update-status">
+    <mxGraphModel dx="970" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-1" parent="1" style="swimlane;childLayout=stackLayout;resizeParent=1;resizeParentMax=0;startSize=20;html=1;labelBackgroundColor=none;" value="Pool" vertex="1">
+          <mxGeometry height="900" width="690" x="760" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-1" source="clickUpdate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="checkStatus" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-2" parent="YOlhoaK9bHh9V6Yk2Nx_-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="kurir" vertex="1">
+          <mxGeometry height="880" width="240" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="YOlhoaK9bHh9V6Yk2Nx_-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="100" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clickUpdate" parent="YOlhoaK9bHh9V6Yk2Nx_-2" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Klik &#39;Update Status&#39;&#xa;pada Order Card" vertex="1">
+          <mxGeometry height="60" width="160" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-2" source="start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="clickUpdate" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-43" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-2" source="YOlhoaK9bHh9V6Yk2Nx_-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-14" parent="YOlhoaK9bHh9V6Yk2Nx_-2" style="rounded=1;whiteSpace=wrap;html=1;" value="pesanan diterima" vertex="1">
+          <mxGeometry height="60" width="120" x="60" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-48" parent="YOlhoaK9bHh9V6Yk2Nx_-2" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="100" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-3" parent="YOlhoaK9bHh9V6Yk2Nx_-1" style="swimlane;startSize=20;html=1;labelBackgroundColor=none;" value="Lane 2" vertex="1">
+          <mxGeometry height="880" width="450" x="240" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="checkStatus" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Decision:&#xa;Status&#xa;Saat Ini?" vertex="1">
+          <mxGeometry height="100" width="100" x="90" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="selesaiDikirim" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="New Status:&#xa;&#39;dikirim&#39;&#xa;(Mulai Pengiriman)" vertex="1">
+          <mxGeometry height="50" width="130" x="20" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkStatus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="selesaiDikirim" value="selesai">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dikirimDiterima" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="New Status:&#xa;&#39;diterima&#39;&#xa;(Diterima Customer)" vertex="1">
+          <mxGeometry height="50" width="130" x="193.75" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkStatus" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="dikirimDiterima" value="dikirim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-37" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkCOD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" target="showConfirm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="344" y="350" />
+              <mxPoint x="344" y="613" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="checkCOD" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="COD?" vertex="1">
+          <mxGeometry height="80" width="81.25" x="218.75" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="dikirimDiterima" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="checkCOD" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-35" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkBukti" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="showConfirm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-36" connectable="0" parent="YOlhoaK9bHh9V6Yk2Nx_-35" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="ya" vertex="1">
+          <mxGeometry relative="1" x="-0.1667" y="-4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="checkBukti" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rhombus;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Has&#xa;Bukti&#xa;Bayar?" vertex="1">
+          <mxGeometry height="80" width="80" x="218.75" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkCOD" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="checkBukti" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="errBukti" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="Snackbar:&#xa;&#39;Upload bukti pembayaran&#xa;COD terlebih dahulu&#39;" vertex="1">
+          <mxGeometry height="60" width="160" x="20" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-3" source="checkBukti" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;labelBackgroundColor=none;fontColor=default;" target="errBukti" value="Tidak">
+          <mxGeometry relative="1" x="-0.5152" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="showConfirm" parent="YOlhoaK9bHh9V6Yk2Nx_-3" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="_updateStatus()&#xa;Tampil Dialog Konfirmasi:&#xa;&#39;Update status order?&#39;" vertex="1">
+          <mxGeometry height="70" width="170" x="153.75" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="YOlhoaK9bHh9V6Yk2Nx_-33" edge="1" parent="YOlhoaK9bHh9V6Yk2Nx_-1" source="showConfirm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.427;entryY=0.07;entryDx=0;entryDy=0;entryPerimeter=0;" target="YOlhoaK9bHh9V6Yk2Nx_-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
